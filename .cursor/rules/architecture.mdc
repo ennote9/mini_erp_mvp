@@ -1,0 +1,46 @@
+---
+description: Use for domain logic, document rules, statuses, validation, and inventory behavior.
+globs:
+  - lib/**
+alwaysApply: false
+---
+
+# Architecture Rule
+
+Before changing domain or business logic, read:
+- docs/01_product_core/01_MVP_Overview.md
+- docs/01_product_core/02_Domain_Model.md
+- docs/01_product_core/03_Statuses_and_Rules.md
+- docs/01_product_core/04_Document_Flows.md
+- docs/01_product_core/05_Validation_Rules.md
+- docs/01_product_core/07_MVP_Scope_Freeze_v0.1.md
+
+Mandatory rules:
+- This project is a mini ERP MVP, not a full ERP/WMS platform.
+- Purchase Order and Sales Order are intent documents.
+- Receipt and Shipment are fact documents.
+- Only Posted Receipt and Posted Shipment affect inventory.
+- Stock Balance must not be edited manually.
+- Stock Movement must not be created or edited manually.
+- Confirmed Purchase Order and Confirmed Sales Order are read-only.
+- Posted documents are read-only.
+- Posted documents are not reversible in MVP.
+
+Do not add:
+- partial receipt
+- partial shipment
+- multiple receipts per purchase order
+- multiple shipments per sales order
+- pricing
+- amounts
+- taxes
+- payments
+- roles and permissions
+- WMS-level logic
+- reservations
+- picking
+- packing
+- bins/locations
+- lots/batches/serials
+
+If docs and code conflict, prefer docs and explicitly report the conflict.

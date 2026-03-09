@@ -1,0 +1,32 @@
+---
+description: Use to prevent scope creep and enforce MVP boundaries.
+globs:
+  - lib/**
+alwaysApply: true
+---
+
+# Scope Rule
+
+Before proposing new features, read:
+- docs/01_product_core/07_MVP_Scope_Freeze_v0.1.md
+- docs/04_growth_and_roadmap/23_Out_of_Scope_and_Future_Expansion_Map.md
+
+Hard boundaries for MVP:
+- Receipt is created only from Confirmed Purchase Order
+- Shipment is created only from Confirmed Sales Order
+- Receipt has no direct New action from list page
+- Shipment has no direct New action from list page
+- Stock Balances and Stock Movements do not have detail pages in MVP
+- No saved views
+- No advanced filter builder
+- No grouping
+- No freeze columns
+- No inline editing
+- No pricing or finance layer
+- No permissions model
+- No WMS process layer
+
+If a requested change belongs to v0.2, v1.0+, or future ecosystem:
+- do not silently implement it
+- explicitly say it is out of MVP scope
+- keep implementation within v0.1 boundaries

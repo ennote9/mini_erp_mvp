@@ -1,0 +1,44 @@
+---
+description: Use for UI, pages, shell, navigation, forms, grids, and dashboard work.
+globs:
+  - lib/**
+alwaysApply: false
+---
+
+# UI Rule
+
+Before changing UI, read:
+- docs/02_screens_and_navigation/08_Screens_v1.md
+- docs/02_screens_and_navigation/09_Navigation_and_App_Shell_v1.md
+- docs/02_screens_and_navigation/10_Screen_to_Screen_Navigation_Map_v1.md
+- docs/03_ui_ux_patterns/11_List_Page_Pattern_v1.md
+- docs/03_ui_ux_patterns/12_Object_Page_Pattern_v1.md
+- docs/03_ui_ux_patterns/13_Document_Page_Layout_v1.md
+- docs/03_ui_ux_patterns/14_Master_Data_Page_Layout_v1.md
+- docs/03_ui_ux_patterns/15_Form_Layout_Pattern_v1.md
+- docs/03_ui_ux_patterns/16_Create_Edit_Pattern_v1.md
+- docs/03_ui_ux_patterns/17_Dashboard_v1.md
+- docs/03_ui_ux_patterns/18_Document_Numbering_and_Naming_Rules_v1.md
+- docs/03_ui_ux_patterns/19_Data_Grid_Column_Definitions_v1.md
+- docs/03_ui_ux_patterns/20_Grid_Interaction_Rules_v1.md
+- docs/03_ui_ux_patterns/21_Empty_Loading_Error_States_v1.md
+- docs/03_ui_ux_patterns/22_UI_Consistency_Rules_v1.md
+
+Mandatory UI rules:
+- Desktop-first
+- Dark-first, but light-ready architecture
+- English UI
+- Sidebar-based shell
+- Left navigation with collapse/expand
+- Grouped navigation
+- List page -> object page pattern
+- Create/edit on separate pages
+- No modal-based document editing
+- No inline editing in grids
+- No old View/configurator logic
+- Checkbox column on all list pages
+- Single-column sort only in MVP
+- Status badges are informational, not workflow controls
+
+Keep UI dense, structured, and enterprise-style.
+Do not introduce consumer-style airy layouts or decorative patterns.

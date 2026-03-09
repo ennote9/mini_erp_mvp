@@ -1,0 +1,43 @@
+import 'package:flutter/material.dart';
+
+import 'page_frame.dart';
+import 'sidebar/app_sidebar.dart';
+
+/// Stable app shell: left sidebar (expand/collapse) + main workspace.
+/// Docs: 09_Navigation_and_App_Shell_v1.md
+class AppShell extends StatefulWidget {
+  const AppShell({
+    super.key,
+    required this.child,
+  });
+
+  final Widget child;
+
+  @override
+  State<AppShell> createState() => _AppShellState();
+}
+
+class _AppShellState extends State<AppShell> {
+  bool _sidebarExpanded = true;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Row(
+        children: [
+          AppSidebar(isExpanded: _sidebarExpanded),
+          IconButton(
+            icon: Icon(_sidebarExpanded ? Icons.chevron_left : Icons.chevron_right),
+            onPressed: () => setState(() => _sidebarExpanded = !_sidebarExpanded),
+            style: IconButton.styleFrom(
+              backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
+            ),
+          ),
+          Expanded(
+            child: PageFrame(child: widget.child),
+          ),
+        ],
+      ),
+    );
+  }
+}
