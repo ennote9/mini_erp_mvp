@@ -34,10 +34,18 @@ class _ItemPageState extends State<ItemPage> {
   String? _uomError;
   String? _codeUniqueError;
 
-  @override
-  void initState() {
-    super.initState();
+  void _loadStateFromWidget() {
     if (widget.isCreateMode) {
+      _item = null;
+      _isActive = true;
+      _codeController.clear();
+      _nameController.clear();
+      _uomController.clear();
+      _descriptionController.clear();
+      _codeError = null;
+      _nameError = null;
+      _uomError = null;
+      _codeUniqueError = null;
       _loading = false;
     } else {
       _item = _repo.getById(widget.id!);
@@ -48,7 +56,26 @@ class _ItemPageState extends State<ItemPage> {
         _descriptionController.text = _item!.description ?? '';
         _isActive = _item!.isActive;
       }
+      _codeError = null;
+      _nameError = null;
+      _uomError = null;
+      _codeUniqueError = null;
       _loading = false;
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadStateFromWidget();
+  }
+
+  @override
+  void didUpdateWidget(covariant ItemPage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.id != widget.id) {
+      _loadStateFromWidget();
+      if (mounted) setState(() {});
     }
   }
 
