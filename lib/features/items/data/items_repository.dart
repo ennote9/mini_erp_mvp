@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 import 'item.dart';
 
 /// In-memory repository for Items. No backend. Docs: 02_Domain_Model.md, 05_Validation_Rules.md
@@ -6,6 +8,9 @@ class ItemsRepository {
 
   final Map<String, Item> _items = {};
   int _nextId = 1;
+
+  /// Notifies when add or update changes data. Items list listens to refresh.
+  final ValueNotifier<int> version = ValueNotifier<int>(0);
 
   List<Item> getAll() => _items.values.toList()..sort((a, b) => a.code.compareTo(b.code));
 
@@ -41,12 +46,14 @@ class ItemsRepository {
     final id = (_nextId++).toString();
     final created = item.copyWith(id: id);
     _items[id] = created;
+    version.value++;
     return created;
   }
 
   void update(Item item) {
     if (_items.containsKey(item.id)) {
       _items[item.id] = item;
+      version.value++;
     }
   }
 }

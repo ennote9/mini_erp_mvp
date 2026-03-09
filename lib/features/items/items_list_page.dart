@@ -32,10 +32,18 @@ class _ItemsListPageState extends State<ItemsListPage> {
     });
   }
 
+  void _refreshFromRepo() {
+    if (!mounted) return;
+    setState(() {
+      _items = _repo.search(query: _searchQuery, activeOnly: _activeFilter);
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     _searchController.addListener(_applySearchAndFilter);
+    _repo.version.addListener(_refreshFromRepo);
     _load();
   }
 
@@ -43,7 +51,6 @@ class _ItemsListPageState extends State<ItemsListPage> {
     setState(() {
       _loading = true;
     });
-    // In-memory is synchronous; brief delay to show loading state if desired.
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       setState(() {
@@ -55,6 +62,7 @@ class _ItemsListPageState extends State<ItemsListPage> {
 
   @override
   void dispose() {
+    _repo.version.removeListener(_refreshFromRepo);
     _searchController.dispose();
     super.dispose();
   }
