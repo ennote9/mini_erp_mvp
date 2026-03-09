@@ -37,9 +37,14 @@ class AppDocumentPagePlaceholder extends StatelessWidget {
             actions: [
               if (statusLabel != null)
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 4,
+                  ),
                   decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.surfaceContainerHighest,
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: Text(
@@ -57,7 +62,9 @@ class AppDocumentPagePlaceholder extends StatelessWidget {
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 border: Border.all(
-                  color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.3),
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.outline.withValues(alpha: 0.3),
                 ),
                 borderRadius: BorderRadius.circular(6),
               ),
@@ -71,7 +78,9 @@ class AppDocumentPagePlaceholder extends StatelessWidget {
           // Tab bar: Overview / Lines
           TabBar(
             labelColor: Theme.of(context).colorScheme.primary,
-            unselectedLabelColor: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+            unselectedLabelColor: Theme.of(
+              context,
+            ).colorScheme.onSurface.withValues(alpha: 0.7),
             tabs: const [
               Tab(text: 'Overview'),
               Tab(text: 'Lines'),
@@ -84,7 +93,9 @@ class AppDocumentPagePlaceholder extends StatelessWidget {
               children: [
                 SingleChildScrollView(
                   padding: const EdgeInsets.all(24),
-                  child: AppPlaceholderState(message: overviewPlaceholderMessage),
+                  child: AppPlaceholderState(
+                    message: overviewPlaceholderMessage,
+                  ),
                 ),
                 SingleChildScrollView(
                   padding: const EdgeInsets.all(24),

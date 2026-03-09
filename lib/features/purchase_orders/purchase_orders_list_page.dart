@@ -12,7 +12,8 @@ class PurchaseOrdersListPage extends StatelessWidget {
     return AppListPagePlaceholder(
       title: 'Purchase Orders',
       showNewButton: true,
-      onNewPressed: () => context.go('/${AppRoutes.pathPurchaseOrders}/${AppRoutes.pathNew}'),
+      onNewPressed: () =>
+          context.go('/${AppRoutes.pathPurchaseOrders}/${AppRoutes.pathNew}'),
       placeholderMessage: 'No purchase orders',
     );
   }

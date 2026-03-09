@@ -12,7 +12,8 @@ class WarehousesListPage extends StatelessWidget {
     return AppListPagePlaceholder(
       title: 'Warehouses',
       showNewButton: true,
-      onNewPressed: () => context.go('/${AppRoutes.pathWarehouses}/${AppRoutes.pathNew}'),
+      onNewPressed: () =>
+          context.go('/${AppRoutes.pathWarehouses}/${AppRoutes.pathNew}'),
       placeholderMessage: 'No warehouses',
     );
   }

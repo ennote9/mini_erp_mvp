@@ -9,10 +9,7 @@ import 'sidebar_item.dart';
 /// Left sidebar: expanded/collapsed, grouped navigation, active route highlighting.
 /// Docs: 09_Navigation_and_App_Shell_v1.md (Sidebar structure and behavior)
 class AppSidebar extends StatelessWidget {
-  const AppSidebar({
-    super.key,
-    required this.isExpanded,
-  });
+  const AppSidebar({super.key, required this.isExpanded});
 
   final bool isExpanded;
 
@@ -20,14 +17,17 @@ class AppSidebar extends StatelessWidget {
     if (path == '/${AppRoutes.pathDashboard}') {
       return location == path || location == '/' || location.isEmpty;
     }
-    return location == path || (location.startsWith('$path/') && location.length > path.length + 1);
+    return location == path ||
+        (location.startsWith('$path/') && location.length > path.length + 1);
   }
 
   @override
   Widget build(BuildContext context) {
     final location = GoRouterState.of(context).uri.path;
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final bg = isDark ? AppColorTokens.sidebarBackgroundDark : AppColorTokens.sidebarBackgroundLight;
+    final bg = isDark
+        ? AppColorTokens.sidebarBackgroundDark
+        : AppColorTokens.sidebarBackgroundLight;
 
     return Container(
       width: isExpanded ? 240 : 56,
@@ -58,28 +58,36 @@ class AppSidebar extends StatelessWidget {
                 label: 'Items',
                 path: '/${AppRoutes.pathItems}',
                 isExpanded: isExpanded,
-                isActive: location == '/${AppRoutes.pathItems}' || location.startsWith('/${AppRoutes.pathItems}/'),
+                isActive:
+                    location == '/${AppRoutes.pathItems}' ||
+                    location.startsWith('/${AppRoutes.pathItems}/'),
               ),
               SidebarItem(
                 icon: Icons.local_shipping_outlined,
                 label: 'Suppliers',
                 path: '/${AppRoutes.pathSuppliers}',
                 isExpanded: isExpanded,
-                isActive: location == '/${AppRoutes.pathSuppliers}' || location.startsWith('/${AppRoutes.pathSuppliers}/'),
+                isActive:
+                    location == '/${AppRoutes.pathSuppliers}' ||
+                    location.startsWith('/${AppRoutes.pathSuppliers}/'),
               ),
               SidebarItem(
                 icon: Icons.person_outline,
                 label: 'Customers',
                 path: '/${AppRoutes.pathCustomers}',
                 isExpanded: isExpanded,
-                isActive: location == '/${AppRoutes.pathCustomers}' || location.startsWith('/${AppRoutes.pathCustomers}/'),
+                isActive:
+                    location == '/${AppRoutes.pathCustomers}' ||
+                    location.startsWith('/${AppRoutes.pathCustomers}/'),
               ),
               SidebarItem(
                 icon: Icons.warehouse_outlined,
                 label: 'Warehouses',
                 path: '/${AppRoutes.pathWarehouses}',
                 isExpanded: isExpanded,
-                isActive: location == '/${AppRoutes.pathWarehouses}' || location.startsWith('/${AppRoutes.pathWarehouses}/'),
+                isActive:
+                    location == '/${AppRoutes.pathWarehouses}' ||
+                    location.startsWith('/${AppRoutes.pathWarehouses}/'),
               ),
             ],
           ),
@@ -95,14 +103,18 @@ class AppSidebar extends StatelessWidget {
                 label: 'Purchase Orders',
                 path: '/${AppRoutes.pathPurchaseOrders}',
                 isExpanded: isExpanded,
-                isActive: location == '/${AppRoutes.pathPurchaseOrders}' || location.startsWith('/${AppRoutes.pathPurchaseOrders}/'),
+                isActive:
+                    location == '/${AppRoutes.pathPurchaseOrders}' ||
+                    location.startsWith('/${AppRoutes.pathPurchaseOrders}/'),
               ),
               SidebarItem(
                 icon: Icons.receipt_long_outlined,
                 label: 'Receipts',
                 path: '/${AppRoutes.pathReceipts}',
                 isExpanded: isExpanded,
-                isActive: location == '/${AppRoutes.pathReceipts}' || location.startsWith('/${AppRoutes.pathReceipts}/'),
+                isActive:
+                    location == '/${AppRoutes.pathReceipts}' ||
+                    location.startsWith('/${AppRoutes.pathReceipts}/'),
               ),
             ],
           ),
@@ -118,14 +130,18 @@ class AppSidebar extends StatelessWidget {
                 label: 'Sales Orders',
                 path: '/${AppRoutes.pathSalesOrders}',
                 isExpanded: isExpanded,
-                isActive: location == '/${AppRoutes.pathSalesOrders}' || location.startsWith('/${AppRoutes.pathSalesOrders}/'),
+                isActive:
+                    location == '/${AppRoutes.pathSalesOrders}' ||
+                    location.startsWith('/${AppRoutes.pathSalesOrders}/'),
               ),
               SidebarItem(
                 icon: Icons.local_shipping_outlined,
                 label: 'Shipments',
                 path: '/${AppRoutes.pathShipments}',
                 isExpanded: isExpanded,
-                isActive: location == '/${AppRoutes.pathShipments}' || location.startsWith('/${AppRoutes.pathShipments}/'),
+                isActive:
+                    location == '/${AppRoutes.pathShipments}' ||
+                    location.startsWith('/${AppRoutes.pathShipments}/'),
               ),
             ],
           ),

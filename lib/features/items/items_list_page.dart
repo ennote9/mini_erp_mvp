@@ -79,7 +79,8 @@ class _ItemsListPageState extends State<ItemsListPage> {
           title: 'Items',
           actions: [
             FilledButton.icon(
-              onPressed: () => context.go('/${AppRoutes.pathItems}/${AppRoutes.pathNew}'),
+              onPressed: () =>
+                  context.go('/${AppRoutes.pathItems}/${AppRoutes.pathNew}'),
               icon: const Icon(Icons.add, size: 18),
               label: const Text('New'),
             ),
@@ -168,12 +169,18 @@ class _ControlsBar extends StatelessWidget {
                 hintText: 'Search',
                 isDense: true,
                 border: OutlineInputBorder(),
-                contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                contentPadding: EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 8,
+                ),
               ),
             ),
           ),
           const SizedBox(width: 16),
-          _FilterChips(activeFilter: activeFilter, onFilterChanged: onFilterChanged),
+          _FilterChips(
+            activeFilter: activeFilter,
+            onFilterChanged: onFilterChanged,
+          ),
         ],
       ),
     );
@@ -243,7 +250,9 @@ class _ItemsGrid extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         child: DataTable(
           headingRowColor: WidgetStateProperty.resolveWith((states) {
-            return Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.5);
+            return Theme.of(
+              context,
+            ).colorScheme.surfaceContainerHighest.withValues(alpha: 0.5);
           }),
           columns: [
             DataColumn(
@@ -272,7 +281,10 @@ class _ItemsGrid extends StatelessWidget {
                 DataCell(Text(item.code), onTap: () => onRowTap(item)),
                 DataCell(Text(item.name), onTap: () => onRowTap(item)),
                 DataCell(Text(item.uom), onTap: () => onRowTap(item)),
-                DataCell(Text(item.isActive ? 'Yes' : 'No'), onTap: () => onRowTap(item)),
+                DataCell(
+                  Text(item.isActive ? 'Yes' : 'No'),
+                  onTap: () => onRowTap(item),
+                ),
               ],
             );
           }).toList(),

@@ -12,20 +12,19 @@ class ItemsRepository {
   /// Notifies when add or update changes data. Items list listens to refresh.
   final ValueNotifier<int> version = ValueNotifier<int>(0);
 
-  List<Item> getAll() => _items.values.toList()..sort((a, b) => a.code.compareTo(b.code));
+  List<Item> getAll() =>
+      _items.values.toList()..sort((a, b) => a.code.compareTo(b.code));
 
   Item? getById(String id) => _items[id];
 
   /// Returns items matching search (code or name, case-insensitive) and active filter.
-  List<Item> search({
-    String query = '',
-    bool? activeOnly,
-  }) {
+  List<Item> search({String query = '', bool? activeOnly}) {
     var list = getAll();
     final q = query.trim().toLowerCase();
     if (q.isNotEmpty) {
       list = list.where((e) {
-        return e.code.toLowerCase().contains(q) || e.name.toLowerCase().contains(q);
+        return e.code.toLowerCase().contains(q) ||
+            e.name.toLowerCase().contains(q);
       }).toList();
     }
     if (activeOnly != null) {
@@ -38,7 +37,10 @@ class ItemsRepository {
   bool isCodeTaken(String code, [String? excludeId]) {
     final c = code.trim();
     if (c.isEmpty) return false;
-    return _items.values.any((e) => e.id != excludeId && e.code.trim().toLowerCase() == c.toLowerCase());
+    return _items.values.any(
+      (e) =>
+          e.id != excludeId && e.code.trim().toLowerCase() == c.toLowerCase(),
+    );
   }
 
   /// Adds item; assigns new id. Returns the created item with id.

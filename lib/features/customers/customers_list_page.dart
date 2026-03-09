@@ -12,7 +12,8 @@ class CustomersListPage extends StatelessWidget {
     return AppListPagePlaceholder(
       title: 'Customers',
       showNewButton: true,
-      onNewPressed: () => context.go('/${AppRoutes.pathCustomers}/${AppRoutes.pathNew}'),
+      onNewPressed: () =>
+          context.go('/${AppRoutes.pathCustomers}/${AppRoutes.pathNew}'),
       placeholderMessage: 'No customers',
     );
   }

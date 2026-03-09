@@ -90,7 +90,8 @@ class _ItemPageState extends State<ItemPage> {
 
   bool get _hasItem => _item != null;
 
-  String get _title => widget.isCreateMode ? 'New Item' : 'Item ${_item?.code ?? widget.id}';
+  String get _title =>
+      widget.isCreateMode ? 'New Item' : 'Item ${_item?.code ?? widget.id}';
 
   List<String> get _breadcrumbSegments => widget.isCreateMode
       ? ['Master Data', 'Items', 'New Item']
@@ -128,7 +129,12 @@ class _ItemPageState extends State<ItemPage> {
 
   void _save() {
     _validate();
-    if (_codeError != null || _nameError != null || _uomError != null || _codeUniqueError != null) return;
+    if (_codeError != null ||
+        _nameError != null ||
+        _uomError != null ||
+        _codeUniqueError != null) {
+      return;
+    }
 
     final code = _codeController.text.trim();
     final name = _nameController.text.trim();
@@ -137,16 +143,20 @@ class _ItemPageState extends State<ItemPage> {
     final descOrNull = desc.isEmpty ? null : desc;
 
     if (widget.isCreateMode) {
-      final created = _repo.add(Item(
-        id: '',
-        code: code,
-        name: name,
-        uom: uom,
-        isActive: _isActive,
-        description: descOrNull,
-      ));
+      final created = _repo.add(
+        Item(
+          id: '',
+          code: code,
+          name: name,
+          uom: uom,
+          isActive: _isActive,
+          description: descOrNull,
+        ),
+      );
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Item saved')));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Item saved')));
         final id = created.id;
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (!mounted) return;
@@ -154,16 +164,20 @@ class _ItemPageState extends State<ItemPage> {
         });
       }
     } else if (_item != null) {
-      _repo.update(_item!.copyWith(
-        code: code,
-        name: name,
-        uom: uom,
-        isActive: _isActive,
-        description: descOrNull,
-      ));
+      _repo.update(
+        _item!.copyWith(
+          code: code,
+          name: name,
+          uom: uom,
+          isActive: _isActive,
+          description: descOrNull,
+        ),
+      );
       setState(() => _item = _repo.getById(_item!.id));
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Item saved')));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Item saved')));
       }
     }
   }
@@ -177,7 +191,9 @@ class _ItemPageState extends State<ItemPage> {
     _repo.update(_item!.copyWith(isActive: false));
     setState(() => _item = _repo.getById(_item!.id));
     if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Item deactivated')));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Item deactivated')));
     }
   }
 
@@ -186,7 +202,9 @@ class _ItemPageState extends State<ItemPage> {
     _repo.update(_item!.copyWith(isActive: true));
     setState(() => _item = _repo.getById(_item!.id));
     if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Item activated')));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Item activated')));
     }
   }
 
@@ -201,12 +219,12 @@ class _ItemPageState extends State<ItemPage> {
         children: [
           AppPageHeader(
             title: 'Item',
-            breadcrumb: AppBreadcrumb(segments: ['Master Data', 'Items', widget.id!]),
+            breadcrumb: AppBreadcrumb(
+              segments: ['Master Data', 'Items', widget.id!],
+            ),
           ),
           const Divider(height: 1),
-          const Expanded(
-            child: Center(child: Text('Item not found')),
-          ),
+          const Expanded(child: Center(child: Text('Item not found'))),
         ],
       );
     }
@@ -240,7 +258,9 @@ class _ItemPageState extends State<ItemPage> {
                 },
                 style: ButtonStyle(
                   visualDensity: VisualDensity.compact,
-                  padding: WidgetStateProperty.all(const EdgeInsets.symmetric(horizontal: 12, vertical: 8)),
+                  padding: WidgetStateProperty.all(
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  ),
                 ),
               ),
             ],
@@ -251,49 +271,59 @@ class _ItemPageState extends State<ItemPage> {
           child: SingleChildScrollView(
             padding: const EdgeInsets.all(24),
             child: LayoutBuilder(
-                builder: (context, constraints) {
-                  final useTwoColumns = constraints.maxWidth >= 600;
-                  return useTwoColumns
-                      ? Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Expanded(child: _MainDetailsBlock(
+              builder: (context, constraints) {
+                final useTwoColumns = constraints.maxWidth >= 600;
+                return useTwoColumns
+                    ? Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            child: _MainDetailsBlock(
                               codeController: _codeController,
                               nameController: _nameController,
                               uomController: _uomController,
                               isActive: _isActive,
                               isActiveEditable: widget.isCreateMode,
-                              onActiveChanged: (v) => setState(() => _isActive = v ?? true),
-                              codeError: _codeError ?? _codeUniqueError,
-                              nameError: _nameError,
-                              uomError: _uomError,
-                            )),
-                            const SizedBox(width: 24),
-                            Expanded(child: _SecondaryBlock(descriptionController: _descriptionController)),
-                          ],
-                        )
-                      : Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            _MainDetailsBlock(
-                              codeController: _codeController,
-                              nameController: _nameController,
-                              uomController: _uomController,
-                              isActive: _isActive,
-                              isActiveEditable: widget.isCreateMode,
-                              onActiveChanged: (v) => setState(() => _isActive = v ?? true),
+                              onActiveChanged: (v) =>
+                                  setState(() => _isActive = v ?? true),
                               codeError: _codeError ?? _codeUniqueError,
                               nameError: _nameError,
                               uomError: _uomError,
                             ),
-                            const SizedBox(height: 24),
-                            _SecondaryBlock(descriptionController: _descriptionController),
-                          ],
-                        );
-                },
-              ),
+                          ),
+                          const SizedBox(width: 24),
+                          Expanded(
+                            child: _SecondaryBlock(
+                              descriptionController: _descriptionController,
+                            ),
+                          ),
+                        ],
+                      )
+                    : Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          _MainDetailsBlock(
+                            codeController: _codeController,
+                            nameController: _nameController,
+                            uomController: _uomController,
+                            isActive: _isActive,
+                            isActiveEditable: widget.isCreateMode,
+                            onActiveChanged: (v) =>
+                                setState(() => _isActive = v ?? true),
+                            codeError: _codeError ?? _codeUniqueError,
+                            nameError: _nameError,
+                            uomError: _uomError,
+                          ),
+                          const SizedBox(height: 24),
+                          _SecondaryBlock(
+                            descriptionController: _descriptionController,
+                          ),
+                        ],
+                      );
+              },
             ),
           ),
+        ),
       ],
     );
   }
@@ -327,7 +357,10 @@ class _MainDetailsBlock extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text('Basic Information', style: Theme.of(context).textTheme.titleSmall),
+        Text(
+          'Basic Information',
+          style: Theme.of(context).textTheme.titleSmall,
+        ),
         const SizedBox(height: 12),
         TextFormField(
           controller: codeController,

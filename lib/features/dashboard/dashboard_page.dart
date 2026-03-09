@@ -18,20 +18,33 @@ class DashboardPage extends StatelessWidget {
           const AppPageHeader(title: 'Dashboard'),
           const SizedBox(height: 24),
           // A. Summary Cards
-          Text(
-            'Summary',
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
+          Text('Summary', style: Theme.of(context).textTheme.titleMedium),
           const SizedBox(height: 12),
           Row(
             children: [
-              _DashboardCard(title: 'Items', subtitle: '0', onTap: () => context.go('/${AppRoutes.pathItems}')),
+              _DashboardCard(
+                title: 'Items',
+                subtitle: '0',
+                onTap: () => context.go('/${AppRoutes.pathItems}'),
+              ),
               const SizedBox(width: 16),
-              _DashboardCard(title: 'Suppliers', subtitle: '0', onTap: () => context.go('/${AppRoutes.pathSuppliers}')),
+              _DashboardCard(
+                title: 'Suppliers',
+                subtitle: '0',
+                onTap: () => context.go('/${AppRoutes.pathSuppliers}'),
+              ),
               const SizedBox(width: 16),
-              _DashboardCard(title: 'Customers', subtitle: '0', onTap: () => context.go('/${AppRoutes.pathCustomers}')),
+              _DashboardCard(
+                title: 'Customers',
+                subtitle: '0',
+                onTap: () => context.go('/${AppRoutes.pathCustomers}'),
+              ),
               const SizedBox(width: 16),
-              _DashboardCard(title: 'Warehouses', subtitle: '0', onTap: () => context.go('/${AppRoutes.pathWarehouses}')),
+              _DashboardCard(
+                title: 'Warehouses',
+                subtitle: '0',
+                onTap: () => context.go('/${AppRoutes.pathWarehouses}'),
+              ),
             ],
           ),
           const SizedBox(height: 32),
@@ -62,9 +75,17 @@ class DashboardPage extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Text('Latest Purchase Orders', style: Theme.of(context).textTheme.titleSmall),
+                    Text(
+                      'Latest Purchase Orders',
+                      style: Theme.of(context).textTheme.titleSmall,
+                    ),
                     const SizedBox(height: 8),
-                    const Card(child: Padding(padding: EdgeInsets.all(16), child: Text('No data'))),
+                    const Card(
+                      child: Padding(
+                        padding: EdgeInsets.all(16),
+                        child: Text('No data'),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -73,9 +94,17 @@ class DashboardPage extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Text('Latest Sales Orders', style: Theme.of(context).textTheme.titleSmall),
+                    Text(
+                      'Latest Sales Orders',
+                      style: Theme.of(context).textTheme.titleSmall,
+                    ),
                     const SizedBox(height: 8),
-                    const Card(child: Padding(padding: EdgeInsets.all(16), child: Text('No data'))),
+                    const Card(
+                      child: Padding(
+                        padding: EdgeInsets.all(16),
+                        child: Text('No data'),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -84,9 +113,17 @@ class DashboardPage extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Text('Latest Stock Movements', style: Theme.of(context).textTheme.titleSmall),
+                    Text(
+                      'Latest Stock Movements',
+                      style: Theme.of(context).textTheme.titleSmall,
+                    ),
                     const SizedBox(height: 8),
-                    const Card(child: Padding(padding: EdgeInsets.all(16), child: Text('No data'))),
+                    const Card(
+                      child: Padding(
+                        padding: EdgeInsets.all(16),
+                        child: Text('No data'),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -103,16 +140,46 @@ class DashboardPage extends StatelessWidget {
             spacing: 8,
             runSpacing: 8,
             children: [
-              _QuickLink(label: 'Items', onTap: () => context.go('/${AppRoutes.pathItems}')),
-              _QuickLink(label: 'Suppliers', onTap: () => context.go('/${AppRoutes.pathSuppliers}')),
-              _QuickLink(label: 'Customers', onTap: () => context.go('/${AppRoutes.pathCustomers}')),
-              _QuickLink(label: 'Warehouses', onTap: () => context.go('/${AppRoutes.pathWarehouses}')),
-              _QuickLink(label: 'Purchase Orders', onTap: () => context.go('/${AppRoutes.pathPurchaseOrders}')),
-              _QuickLink(label: 'Receipts', onTap: () => context.go('/${AppRoutes.pathReceipts}')),
-              _QuickLink(label: 'Sales Orders', onTap: () => context.go('/${AppRoutes.pathSalesOrders}')),
-              _QuickLink(label: 'Shipments', onTap: () => context.go('/${AppRoutes.pathShipments}')),
-              _QuickLink(label: 'Stock Balances', onTap: () => context.go('/${AppRoutes.pathStockBalances}')),
-              _QuickLink(label: 'Stock Movements', onTap: () => context.go('/${AppRoutes.pathStockMovements}')),
+              _QuickLink(
+                label: 'Items',
+                onTap: () => context.go('/${AppRoutes.pathItems}'),
+              ),
+              _QuickLink(
+                label: 'Suppliers',
+                onTap: () => context.go('/${AppRoutes.pathSuppliers}'),
+              ),
+              _QuickLink(
+                label: 'Customers',
+                onTap: () => context.go('/${AppRoutes.pathCustomers}'),
+              ),
+              _QuickLink(
+                label: 'Warehouses',
+                onTap: () => context.go('/${AppRoutes.pathWarehouses}'),
+              ),
+              _QuickLink(
+                label: 'Purchase Orders',
+                onTap: () => context.go('/${AppRoutes.pathPurchaseOrders}'),
+              ),
+              _QuickLink(
+                label: 'Receipts',
+                onTap: () => context.go('/${AppRoutes.pathReceipts}'),
+              ),
+              _QuickLink(
+                label: 'Sales Orders',
+                onTap: () => context.go('/${AppRoutes.pathSalesOrders}'),
+              ),
+              _QuickLink(
+                label: 'Shipments',
+                onTap: () => context.go('/${AppRoutes.pathShipments}'),
+              ),
+              _QuickLink(
+                label: 'Stock Balances',
+                onTap: () => context.go('/${AppRoutes.pathStockBalances}'),
+              ),
+              _QuickLink(
+                label: 'Stock Movements',
+                onTap: () => context.go('/${AppRoutes.pathStockMovements}'),
+              ),
             ],
           ),
         ],
@@ -146,7 +213,10 @@ class _DashboardCard extends StatelessWidget {
               children: [
                 Text(title, style: Theme.of(context).textTheme.bodySmall),
                 const SizedBox(height: 4),
-                Text(subtitle, style: Theme.of(context).textTheme.headlineSmall),
+                Text(
+                  subtitle,
+                  style: Theme.of(context).textTheme.headlineSmall,
+                ),
               ],
             ),
           ),
@@ -164,9 +234,6 @@ class _QuickLink extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextButton(
-      onPressed: onTap,
-      child: Text(label),
-    );
+    return TextButton(onPressed: onTap, child: Text(label));
   }
 }

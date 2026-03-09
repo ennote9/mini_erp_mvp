@@ -23,17 +23,11 @@ class AppPageHeader extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          if (breadcrumb != null) ...[
-            breadcrumb!,
-            const SizedBox(height: 8),
-          ],
+          if (breadcrumb != null) ...[breadcrumb!, const SizedBox(height: 8)],
           Row(
             children: [
               Expanded(
-                child: Text(
-                  title,
-                  style: theme.textTheme.headlineSmall,
-                ),
+                child: Text(title, style: theme.textTheme.headlineSmall),
               ),
               if (actions != null && actions!.isNotEmpty) ...[
                 const SizedBox(width: 16),

@@ -23,11 +23,17 @@ class SidebarItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final activeColor = isDark ? AppColorTokens.sidebarActiveDark : AppColorTokens.sidebarActiveLight;
-    final hoverColor = isDark ? AppColorTokens.sidebarHoverDark : AppColorTokens.sidebarHoverLight;
+    final activeColor = isDark
+        ? AppColorTokens.sidebarActiveDark
+        : AppColorTokens.sidebarActiveLight;
+    final hoverColor = isDark
+        ? AppColorTokens.sidebarHoverDark
+        : AppColorTokens.sidebarHoverLight;
     final textColor = isActive
         ? activeColor
-        : (isDark ? AppColorTokens.sidebarTextDark : AppColorTokens.sidebarTextLight);
+        : (isDark
+              ? AppColorTokens.sidebarTextDark
+              : AppColorTokens.sidebarTextLight);
 
     return Material(
       color: isActive ? hoverColor.withValues(alpha: 0.5) : Colors.transparent,
@@ -46,7 +52,9 @@ class SidebarItem extends StatelessWidget {
                     label,
                     style: TextStyle(
                       fontSize: 13,
-                      fontWeight: isActive ? FontWeight.w600 : FontWeight.normal,
+                      fontWeight: isActive
+                          ? FontWeight.w600
+                          : FontWeight.normal,
                       color: textColor,
                     ),
                     overflow: TextOverflow.ellipsis,

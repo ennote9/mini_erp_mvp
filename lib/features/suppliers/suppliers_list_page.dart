@@ -12,7 +12,8 @@ class SuppliersListPage extends StatelessWidget {
     return AppListPagePlaceholder(
       title: 'Suppliers',
       showNewButton: true,
-      onNewPressed: () => context.go('/${AppRoutes.pathSuppliers}/${AppRoutes.pathNew}'),
+      onNewPressed: () =>
+          context.go('/${AppRoutes.pathSuppliers}/${AppRoutes.pathNew}'),
       placeholderMessage: 'No suppliers',
     );
   }

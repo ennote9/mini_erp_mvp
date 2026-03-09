@@ -3,11 +3,7 @@ import 'package:flutter/material.dart';
 /// Breadcrumb for object pages. Required on all object pages per docs.
 /// Docs: 09_Navigation_and_App_Shell_v1.md, 12_Object_Page_Pattern_v1.md
 class AppBreadcrumb extends StatelessWidget {
-  const AppBreadcrumb({
-    super.key,
-    required this.segments,
-    this.onTap,
-  });
+  const AppBreadcrumb({super.key, required this.segments, this.onTap});
 
   /// Ordered list of segment labels (e.g. ['Master Data', 'Items', 'ITEM-001']).
   final List<String> segments;
@@ -36,10 +32,7 @@ class AppBreadcrumb extends StatelessWidget {
           if (i > 0) const SizedBox(width: 4),
           GestureDetector(
             onTap: onTap != null ? () => onTap!(i) : null,
-            child: Text(
-              segments[i],
-              style: textStyle,
-            ),
+            child: Text(segments[i], style: textStyle),
           ),
         ],
       ],

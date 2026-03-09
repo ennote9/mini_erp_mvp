@@ -59,18 +59,13 @@ class AppListPagePlaceholder extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 12),
-              OutlinedButton(
-                onPressed: () {},
-                child: const Text('Filter'),
-              ),
+              OutlinedButton(onPressed: () {}, child: const Text('Filter')),
             ],
           ),
         ),
         const Divider(height: 1),
         // Grid area
-        Expanded(
-          child: AppPlaceholderState(message: placeholderMessage),
-        ),
+        Expanded(child: AppPlaceholderState(message: placeholderMessage)),
       ],
     );
   }

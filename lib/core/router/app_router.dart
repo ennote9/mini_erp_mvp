@@ -37,15 +37,18 @@ final GoRouter appRouter = GoRouter(
       routes: [
         GoRoute(
           path: '/${AppRoutes.pathDashboard}',
-          pageBuilder: (context, state) => const NoTransitionPage(child: DashboardPage()),
+          pageBuilder: (context, state) =>
+              const NoTransitionPage(child: DashboardPage()),
         ),
         GoRoute(
           path: '/${AppRoutes.pathItems}',
-          pageBuilder: (context, state) => const NoTransitionPage(child: ItemsListPage()),
+          pageBuilder: (context, state) =>
+              const NoTransitionPage(child: ItemsListPage()),
           routes: [
             GoRoute(
               path: AppRoutes.pathNew,
-              pageBuilder: (context, state) => const NoTransitionPage(child: ItemPage(id: 'new')),
+              pageBuilder: (context, state) =>
+                  const NoTransitionPage(child: ItemPage(id: 'new')),
             ),
             GoRoute(
               path: AppRoutes.pathId,
@@ -57,11 +60,13 @@ final GoRouter appRouter = GoRouter(
         ),
         GoRoute(
           path: '/${AppRoutes.pathSuppliers}',
-          pageBuilder: (context, state) => const NoTransitionPage(child: SuppliersListPage()),
+          pageBuilder: (context, state) =>
+              const NoTransitionPage(child: SuppliersListPage()),
           routes: [
             GoRoute(
               path: AppRoutes.pathNew,
-              pageBuilder: (context, state) => const NoTransitionPage(child: SupplierPage(id: 'new')),
+              pageBuilder: (context, state) =>
+                  const NoTransitionPage(child: SupplierPage(id: 'new')),
             ),
             GoRoute(
               path: AppRoutes.pathId,
@@ -73,11 +78,13 @@ final GoRouter appRouter = GoRouter(
         ),
         GoRoute(
           path: '/${AppRoutes.pathCustomers}',
-          pageBuilder: (context, state) => const NoTransitionPage(child: CustomersListPage()),
+          pageBuilder: (context, state) =>
+              const NoTransitionPage(child: CustomersListPage()),
           routes: [
             GoRoute(
               path: AppRoutes.pathNew,
-              pageBuilder: (context, state) => const NoTransitionPage(child: CustomerPage(id: 'new')),
+              pageBuilder: (context, state) =>
+                  const NoTransitionPage(child: CustomerPage(id: 'new')),
             ),
             GoRoute(
               path: AppRoutes.pathId,
@@ -89,11 +96,13 @@ final GoRouter appRouter = GoRouter(
         ),
         GoRoute(
           path: '/${AppRoutes.pathWarehouses}',
-          pageBuilder: (context, state) => const NoTransitionPage(child: WarehousesListPage()),
+          pageBuilder: (context, state) =>
+              const NoTransitionPage(child: WarehousesListPage()),
           routes: [
             GoRoute(
               path: AppRoutes.pathNew,
-              pageBuilder: (context, state) => const NoTransitionPage(child: WarehousePage(id: 'new')),
+              pageBuilder: (context, state) =>
+                  const NoTransitionPage(child: WarehousePage(id: 'new')),
             ),
             GoRoute(
               path: AppRoutes.pathId,
@@ -105,11 +114,13 @@ final GoRouter appRouter = GoRouter(
         ),
         GoRoute(
           path: '/${AppRoutes.pathPurchaseOrders}',
-          pageBuilder: (context, state) => const NoTransitionPage(child: PurchaseOrdersListPage()),
+          pageBuilder: (context, state) =>
+              const NoTransitionPage(child: PurchaseOrdersListPage()),
           routes: [
             GoRoute(
               path: AppRoutes.pathNew,
-              pageBuilder: (context, state) => const NoTransitionPage(child: PurchaseOrderPage(id: 'new')),
+              pageBuilder: (context, state) =>
+                  const NoTransitionPage(child: PurchaseOrderPage(id: 'new')),
             ),
             GoRoute(
               path: AppRoutes.pathId,
@@ -121,7 +132,8 @@ final GoRouter appRouter = GoRouter(
         ),
         GoRoute(
           path: '/${AppRoutes.pathReceipts}',
-          pageBuilder: (context, state) => const NoTransitionPage(child: ReceiptsListPage()),
+          pageBuilder: (context, state) =>
+              const NoTransitionPage(child: ReceiptsListPage()),
           routes: [
             GoRoute(
               path: AppRoutes.pathId,
@@ -133,11 +145,13 @@ final GoRouter appRouter = GoRouter(
         ),
         GoRoute(
           path: '/${AppRoutes.pathSalesOrders}',
-          pageBuilder: (context, state) => const NoTransitionPage(child: SalesOrdersListPage()),
+          pageBuilder: (context, state) =>
+              const NoTransitionPage(child: SalesOrdersListPage()),
           routes: [
             GoRoute(
               path: AppRoutes.pathNew,
-              pageBuilder: (context, state) => const NoTransitionPage(child: SalesOrderPage(id: 'new')),
+              pageBuilder: (context, state) =>
+                  const NoTransitionPage(child: SalesOrderPage(id: 'new')),
             ),
             GoRoute(
               path: AppRoutes.pathId,
@@ -149,7 +163,8 @@ final GoRouter appRouter = GoRouter(
         ),
         GoRoute(
           path: '/${AppRoutes.pathShipments}',
-          pageBuilder: (context, state) => const NoTransitionPage(child: ShipmentsListPage()),
+          pageBuilder: (context, state) =>
+              const NoTransitionPage(child: ShipmentsListPage()),
           routes: [
             GoRoute(
               path: AppRoutes.pathId,
@@ -161,11 +176,13 @@ final GoRouter appRouter = GoRouter(
         ),
         GoRoute(
           path: '/${AppRoutes.pathStockBalances}',
-          pageBuilder: (context, state) => const NoTransitionPage(child: StockBalancesListPage()),
+          pageBuilder: (context, state) =>
+              const NoTransitionPage(child: StockBalancesListPage()),
         ),
         GoRoute(
           path: '/${AppRoutes.pathStockMovements}',
-          pageBuilder: (context, state) => const NoTransitionPage(child: StockMovementsListPage()),
+          pageBuilder: (context, state) =>
+              const NoTransitionPage(child: StockMovementsListPage()),
         ),
       ],
     ),

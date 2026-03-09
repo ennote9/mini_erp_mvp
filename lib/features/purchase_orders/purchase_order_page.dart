@@ -14,7 +14,11 @@ class PurchaseOrderPage extends StatelessWidget {
   Widget build(BuildContext context) {
     if (isCreateMode) {
       return AppDocumentPagePlaceholder(
-        breadcrumbSegments: ['Purchasing', 'Purchase Orders', 'New Purchase Order'],
+        breadcrumbSegments: [
+          'Purchasing',
+          'Purchase Orders',
+          'New Purchase Order',
+        ],
         title: 'New Purchase Order',
         overviewPlaceholderMessage: 'Overview placeholder',
         linesPlaceholderMessage: 'Lines placeholder',

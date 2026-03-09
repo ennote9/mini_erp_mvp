@@ -34,7 +34,9 @@ class _SidebarGroupState extends State<SidebarGroup> {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final textColor = isDark ? AppColorTokens.sidebarTextMutedDark : AppColorTokens.sidebarTextMutedLight;
+    final textColor = isDark
+        ? AppColorTokens.sidebarTextMutedDark
+        : AppColorTokens.sidebarTextMutedLight;
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -74,7 +76,9 @@ class _SidebarGroupState extends State<SidebarGroup> {
                       style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w500,
-                        color: isDark ? AppColorTokens.sidebarTextDark : AppColorTokens.sidebarTextLight,
+                        color: isDark
+                            ? AppColorTokens.sidebarTextDark
+                            : AppColorTokens.sidebarTextLight,
                       ),
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -87,9 +91,7 @@ class _SidebarGroupState extends State<SidebarGroup> {
         if (_expanded && widget.children.isNotEmpty)
           Padding(
             padding: const EdgeInsets.only(left: 12),
-            child: Column(
-              children: widget.children,
-            ),
+            child: Column(children: widget.children),
           ),
       ],
     );
