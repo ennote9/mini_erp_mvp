@@ -23,16 +23,28 @@ class _AppShellState extends State<AppShell> {
       body: Row(
         children: [
           AppSidebar(isExpanded: _sidebarExpanded),
-          IconButton(
-            icon: Icon(
-              _sidebarExpanded ? Icons.chevron_left : Icons.chevron_right,
-            ),
-            onPressed: () =>
-                setState(() => _sidebarExpanded = !_sidebarExpanded),
-            style: IconButton.styleFrom(
-              backgroundColor: Theme.of(
-                context,
-              ).colorScheme.surfaceContainerHighest,
+          Align(
+            alignment: Alignment.topCenter,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 14),
+              child: IconButton(
+                icon: Icon(
+                  _sidebarExpanded
+                      ? Icons.chevron_left
+                      : Icons.chevron_right,
+                  size: 20,
+                ),
+                onPressed: () =>
+                    setState(() => _sidebarExpanded = !_sidebarExpanded),
+                style: IconButton.styleFrom(
+                  minimumSize: const Size(28, 28),
+                  padding: EdgeInsets.zero,
+                  backgroundColor: Theme.of(context)
+                      .colorScheme
+                      .surfaceContainerHighest
+                      .withValues(alpha: 0.8),
+                ),
+              ),
             ),
           ),
           Expanded(child: PageFrame(child: widget.child)),

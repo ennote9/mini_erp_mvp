@@ -56,7 +56,7 @@ class AppObjectPagePlaceholder extends StatelessWidget {
         const Divider(height: 1),
         Expanded(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.all(24),
+            padding: const EdgeInsets.fromLTRB(24, 20, 24, 24),
             child: AppPlaceholderState(message: placeholderMessage),
           ),
         ),

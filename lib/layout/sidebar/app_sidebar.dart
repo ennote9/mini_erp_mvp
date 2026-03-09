@@ -34,10 +34,10 @@ class AppSidebar extends StatelessWidget {
       color: bg,
       child: Column(
         children: [
-          const SizedBox(height: 16),
+          const SizedBox(height: 20),
           // Dashboard (single item per 09_Navigation_and_App_Shell_v1)
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
+            padding: const EdgeInsets.symmetric(horizontal: 14),
             child: SidebarItem(
               icon: Icons.dashboard_outlined,
               label: 'Dashboard',
@@ -46,7 +46,7 @@ class AppSidebar extends StatelessWidget {
               isActive: _isActive(location, '/${AppRoutes.pathDashboard}'),
             ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 12),
           // Master Data
           SidebarGroup(
             label: 'Master Data',
@@ -91,7 +91,7 @@ class AppSidebar extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 12),
           // Purchasing
           SidebarGroup(
             label: 'Purchasing',
@@ -118,7 +118,7 @@ class AppSidebar extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 12),
           // Sales
           SidebarGroup(
             label: 'Sales',
@@ -145,7 +145,7 @@ class AppSidebar extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 12),
           // Inventory
           SidebarGroup(
             label: 'Inventory',

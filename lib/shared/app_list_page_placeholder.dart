@@ -40,25 +40,25 @@ class AppListPagePlaceholder extends StatelessWidget {
         const Divider(height: 1),
         // Controls bar placeholder
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
           child: Row(
             children: [
               SizedBox(
                 width: 240,
-                height: 36,
+                height: 32,
                 child: TextField(
                   decoration: InputDecoration(
                     hintText: 'Search',
                     isDense: true,
                     border: const OutlineInputBorder(),
                     contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 8,
+                      horizontal: 10,
+                      vertical: 6,
                     ),
                   ),
                 ),
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: 10),
               OutlinedButton(onPressed: () {}, child: const Text('Filter')),
             ],
           ),

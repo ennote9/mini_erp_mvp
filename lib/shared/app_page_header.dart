@@ -18,13 +18,17 @@ class AppPageHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+      padding: const EdgeInsets.fromLTRB(24, 20, 24, 18),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          if (breadcrumb != null) ...[breadcrumb!, const SizedBox(height: 8)],
+          if (breadcrumb != null) ...[
+            breadcrumb!,
+            const SizedBox(height: 10),
+          ],
           Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Expanded(
                 child: Text(title, style: theme.textTheme.headlineSmall),

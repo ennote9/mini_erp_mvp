@@ -15,21 +15,21 @@ class AppBreadcrumb extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final textStyle = theme.textTheme.bodySmall?.copyWith(
-      color: theme.colorScheme.primary,
+      color: theme.colorScheme.tertiary,
     );
     return Wrap(
       crossAxisAlignment: WrapCrossAlignment.center,
-      spacing: 4,
-      runSpacing: 4,
+      spacing: 2,
+      runSpacing: 2,
       children: [
         for (int i = 0; i < segments.length; i++) ...[
           if (i > 0)
             Icon(
               Icons.chevron_right,
-              size: 16,
+              size: 14,
               color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
             ),
-          if (i > 0) const SizedBox(width: 4),
+          if (i > 0) const SizedBox(width: 2),
           GestureDetector(
             onTap: onTap != null ? () => onTap!(i) : null,
             child: Text(segments[i], style: textStyle),

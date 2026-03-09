@@ -1,7 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/router/app_routes.dart';
+import '../../core/theme/app_color_tokens.dart';
 import '../../shared/app_breadcrumb.dart';
 import '../../shared/app_page_header.dart';
 import 'data/item.dart';
@@ -143,7 +145,7 @@ class _ItemPageState extends State<ItemPage> {
     final descOrNull = desc.isEmpty ? null : desc;
 
     if (widget.isCreateMode) {
-      final created = _repo.add(
+      _repo.add(
         Item(
           id: '',
           code: code,
@@ -154,30 +156,25 @@ class _ItemPageState extends State<ItemPage> {
         ),
       );
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text('Item saved')));
-        final id = created.id;
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (!mounted) return;
-          context.go('/${AppRoutes.pathItems}/$id');
-        });
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text('Item saved')));
+        context.go('/${AppRoutes.pathItems}');
       }
     } else if (_item != null) {
+      // Save only editable fields; do not overwrite isActive (controlled by header toggle only).
       _repo.update(
         _item!.copyWith(
           code: code,
           name: name,
           uom: uom,
-          isActive: _isActive,
           description: descOrNull,
         ),
       );
-      setState(() => _item = _repo.getById(_item!.id));
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text('Item saved')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Item saved')),
+        );
+        context.go('/${AppRoutes.pathItems}');
       }
     }
   }
@@ -240,33 +237,38 @@ class _ItemPageState extends State<ItemPage> {
             FilledButton(onPressed: _save, child: const Text('Save')),
             const SizedBox(width: 8),
             OutlinedButton(onPressed: _cancel, child: const Text('Cancel')),
-            if (_hasItem) ...[
-              const SizedBox(width: 8),
-              SegmentedButton<bool>(
-                segments: const [
-                  ButtonSegment<bool>(value: true, label: Text('Active')),
-                  ButtonSegment<bool>(value: false, label: Text('Inactive')),
-                ],
-                selected: {_item!.isActive},
-                onSelectionChanged: (Set<bool> selection) {
-                  final value = selection.first;
-                  if (value && !_item!.isActive) {
-                    _activate();
-                  } else if (!value && _item!.isActive) {
-                    _deactivate();
-                  }
-                },
-                style: ButtonStyle(
-                  visualDensity: VisualDensity.compact,
-                  padding: WidgetStateProperty.all(
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                  ),
-                ),
-              ),
-            ],
           ],
         ),
         const Divider(height: 1),
+        if (_hasItem)
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+            child: Row(
+              children: [
+                Text(
+                  'Active',
+                  style: Theme.of(context).textTheme.labelLarge,
+                ),
+                const SizedBox(width: 12),
+                Transform.scale(
+                  scale: 0.5,
+                  alignment: Alignment.centerLeft,
+                  child: CupertinoSwitch(
+                    value: _item!.isActive,
+                    activeTrackColor: AppColorTokens.switchActiveDark,
+                    onChanged: (bool value) {
+                      if (value && !_item!.isActive) {
+                        _activate();
+                      } else if (!value && _item!.isActive) {
+                        _deactivate();
+                      }
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+        if (_hasItem) const Divider(height: 1),
         Expanded(
           child: SingleChildScrollView(
             padding: const EdgeInsets.all(24),
