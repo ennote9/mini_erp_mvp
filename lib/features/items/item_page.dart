@@ -181,6 +181,15 @@ class _ItemPageState extends State<ItemPage> {
     }
   }
 
+  void _activate() {
+    if (_item == null) return;
+    _repo.update(_item!.copyWith(isActive: true));
+    setState(() => _item = _repo.getById(_item!.id));
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Item activated')));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     if (_loading) {
@@ -213,11 +222,26 @@ class _ItemPageState extends State<ItemPage> {
             FilledButton(onPressed: _save, child: const Text('Save')),
             const SizedBox(width: 8),
             OutlinedButton(onPressed: _cancel, child: const Text('Cancel')),
-            if (_hasItem && _item!.isActive) ...[
+            if (_hasItem) ...[
               const SizedBox(width: 8),
-              OutlinedButton(
-                onPressed: _deactivate,
-                child: const Text('Deactivate'),
+              SegmentedButton<bool>(
+                segments: const [
+                  ButtonSegment<bool>(value: true, label: Text('Active')),
+                  ButtonSegment<bool>(value: false, label: Text('Inactive')),
+                ],
+                selected: {_item!.isActive},
+                onSelectionChanged: (Set<bool> selection) {
+                  final value = selection.first;
+                  if (value && !_item!.isActive) {
+                    _activate();
+                  } else if (!value && _item!.isActive) {
+                    _deactivate();
+                  }
+                },
+                style: ButtonStyle(
+                  visualDensity: VisualDensity.compact,
+                  padding: WidgetStateProperty.all(const EdgeInsets.symmetric(horizontal: 12, vertical: 8)),
+                ),
               ),
             ],
           ],
@@ -335,15 +359,15 @@ class _MainDetailsBlock extends StatelessWidget {
             isDense: true,
           ),
         ),
-        const SizedBox(height: 12),
-        isActiveEditable
-            ? Row(
-                children: [
-                  Checkbox(value: isActive, onChanged: onActiveChanged),
-                  const Text('Active'),
-                ],
-              )
-            : Text('Active: ${isActive ? 'Yes' : 'No'}', style: Theme.of(context).textTheme.bodyMedium),
+        if (isActiveEditable) ...[
+          const SizedBox(height: 12),
+          Row(
+            children: [
+              Checkbox(value: isActive, onChanged: onActiveChanged),
+              const Text('Active'),
+            ],
+          ),
+        ],
       ],
     );
   }
