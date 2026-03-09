@@ -254,7 +254,6 @@ class _ItemsGrid extends StatelessWidget {
             final selected = selectedIds.contains(item.id);
             return DataRow(
               selected: selected,
-              onSelectChanged: (v) => onSelectionChanged(item.id, v ?? false),
               cells: [
                 DataCell(
                   Checkbox(

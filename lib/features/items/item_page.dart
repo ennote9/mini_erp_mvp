@@ -120,7 +120,11 @@ class _ItemPageState extends State<ItemPage> {
       ));
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Item saved')));
-        context.go('/${AppRoutes.pathItems}/${created.id}');
+        final id = created.id;
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (!mounted) return;
+          context.go('/${AppRoutes.pathItems}/$id');
+        });
       }
     } else if (_item != null) {
       _repo.update(_item!.copyWith(
@@ -207,6 +211,7 @@ class _ItemPageState extends State<ItemPage> {
                               nameController: _nameController,
                               uomController: _uomController,
                               isActive: _isActive,
+                              isActiveEditable: widget.isCreateMode,
                               onActiveChanged: (v) => setState(() => _isActive = v ?? true),
                               codeError: _codeError ?? _codeUniqueError,
                               nameError: _nameError,
@@ -224,6 +229,7 @@ class _ItemPageState extends State<ItemPage> {
                               nameController: _nameController,
                               uomController: _uomController,
                               isActive: _isActive,
+                              isActiveEditable: widget.isCreateMode,
                               onActiveChanged: (v) => setState(() => _isActive = v ?? true),
                               codeError: _codeError ?? _codeUniqueError,
                               nameError: _nameError,
@@ -248,6 +254,7 @@ class _MainDetailsBlock extends StatelessWidget {
     required this.nameController,
     required this.uomController,
     required this.isActive,
+    required this.isActiveEditable,
     required this.onActiveChanged,
     this.codeError,
     this.nameError,
@@ -258,6 +265,7 @@ class _MainDetailsBlock extends StatelessWidget {
   final TextEditingController nameController;
   final TextEditingController uomController;
   final bool isActive;
+  final bool isActiveEditable;
   final ValueChanged<bool?> onActiveChanged;
   final String? codeError;
   final String? nameError;
@@ -301,12 +309,14 @@ class _MainDetailsBlock extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 12),
-        Row(
-          children: [
-            Checkbox(value: isActive, onChanged: onActiveChanged),
-            const Text('Active'),
-          ],
-        ),
+        isActiveEditable
+            ? Row(
+                children: [
+                  Checkbox(value: isActive, onChanged: onActiveChanged),
+                  const Text('Active'),
+                ],
+              )
+            : Text('Active: ${isActive ? 'Yes' : 'No'}', style: Theme.of(context).textTheme.bodyMedium),
       ],
     );
   }
