@@ -6,6 +6,7 @@ import '../../shared/app_page_header.dart';
 import '../../shared/app_placeholder_state.dart';
 import '../items/data/items_repository.dart';
 import '../receipts/data/receipts_repository.dart';
+import '../shipments/data/shipments_repository.dart';
 import '../warehouses/data/warehouses_repository.dart';
 import 'data/stock_movement.dart';
 import 'data/stock_movements_repository.dart';
@@ -281,8 +282,11 @@ class _StockMovementsGrid extends StatelessWidget {
                   : 'Receipt ${m.sourceDocumentId}';
               sourceRoute = '/${AppRoutes.pathReceipts}/${m.sourceDocumentId}';
             } else if (m.sourceDocumentType == 'shipment') {
-              sourceLabel = 'Shipment ${m.sourceDocumentId}';
-              // When shipments exist: sourceRoute = '/${AppRoutes.pathShipments}/${m.sourceDocumentId}';
+              final shipment = shipmentsRepository.getById(m.sourceDocumentId);
+              sourceLabel = shipment != null
+                  ? 'Shipment ${shipment.number}'
+                  : 'Shipment ${m.sourceDocumentId}';
+              sourceRoute = '/${AppRoutes.pathShipments}/${m.sourceDocumentId}';
             }
             return DataRow(
               selected: selected,
