@@ -281,16 +281,19 @@ class _WarehousesGrid extends StatelessWidget {
     final headerStyle = ListLayoutConstants.tableHeaderStyle(theme);
     final allSelected =
         warehouses.isNotEmpty && selectedIds.length == warehouses.length;
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(ListLayoutConstants.tableSurfaceBorderRadius),
-        border: Border.all(
-          color: theme.colorScheme.outline.withValues(alpha: ListLayoutConstants.tableSurfaceBorderOpacity),
-        ),
-        color: theme.colorScheme.surfaceContainerLowest.withValues(alpha: ListLayoutConstants.tableSurfaceBackgroundOpacity),
-      ),
-      clipBehavior: Clip.antiAlias,
-      child: SingleChildScrollView(
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return Container(
+          width: constraints.maxWidth,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(ListLayoutConstants.tableSurfaceBorderRadius),
+            border: Border.all(
+              color: theme.colorScheme.outline.withValues(alpha: ListLayoutConstants.tableSurfaceBorderOpacity),
+            ),
+            color: theme.colorScheme.surfaceContainerLowest.withValues(alpha: ListLayoutConstants.tableSurfaceBackgroundOpacity),
+          ),
+          clipBehavior: Clip.antiAlias,
+          child: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: SingleChildScrollView(
           scrollDirection: Axis.horizontal,
@@ -316,9 +319,16 @@ class _WarehousesGrid extends StatelessWidget {
               DataColumn(label: Text('Name', style: headerStyle)),
               DataColumn(label: Text('Active', style: headerStyle)),
             ],
-          rows: warehouses.map((w) {
+          rows: warehouses.asMap().entries.map((entry) {
+            final index = entry.key;
+            final w = entry.value;
             final selected = selectedIds.contains(w.id);
+            final subtleStrip = index.isOdd
+                ? theme.colorScheme.surfaceContainerHighest
+                    .withValues(alpha: ListLayoutConstants.tableRowAlternateOpacity)
+                : null;
             return DataRow(
+              color: WidgetStateProperty.all(subtleStrip),
               selected: selected,
               cells: [
                 DataCell(
@@ -357,6 +367,8 @@ class _WarehousesGrid extends StatelessWidget {
         ),
       ),
     ),
+    );
+      },
     );
   }
 }

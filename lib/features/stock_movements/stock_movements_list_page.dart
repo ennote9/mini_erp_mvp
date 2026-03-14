@@ -275,16 +275,19 @@ class _StockMovementsGrid extends StatelessWidget {
     final headerStyle = ListLayoutConstants.tableHeaderStyle(theme);
     final allSelected =
         movements.isNotEmpty && selectedIds.length == movements.length;
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(ListLayoutConstants.tableSurfaceBorderRadius),
-        border: Border.all(
-          color: theme.colorScheme.outline.withValues(alpha: ListLayoutConstants.tableSurfaceBorderOpacity),
-        ),
-        color: theme.colorScheme.surfaceContainerLowest.withValues(alpha: ListLayoutConstants.tableSurfaceBackgroundOpacity),
-      ),
-      clipBehavior: Clip.antiAlias,
-      child: SingleChildScrollView(
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return Container(
+          width: constraints.maxWidth,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(ListLayoutConstants.tableSurfaceBorderRadius),
+            border: Border.all(
+              color: theme.colorScheme.outline.withValues(alpha: ListLayoutConstants.tableSurfaceBorderOpacity),
+            ),
+            color: theme.colorScheme.surfaceContainerLowest.withValues(alpha: ListLayoutConstants.tableSurfaceBackgroundOpacity),
+          ),
+          clipBehavior: Clip.antiAlias,
+          child: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: SingleChildScrollView(
           scrollDirection: Axis.horizontal,
@@ -314,10 +317,16 @@ class _StockMovementsGrid extends StatelessWidget {
               DataColumn(label: Text('Qty Delta', style: headerStyle)),
               DataColumn(label: Text('Source Document', style: headerStyle)),
             ],
-          rows: movements.map((m) {
+          rows: movements.asMap().entries.map((entry) {
+            final index = entry.key;
+            final m = entry.value;
             final selected = selectedIds.contains(m.id);
             final item = itemsRepository.getById(m.itemId);
             final warehouse = warehousesRepository.getById(m.warehouseId);
+            final subtleStrip = index.isOdd
+                ? theme.colorScheme.surfaceContainerHighest
+                    .withValues(alpha: ListLayoutConstants.tableRowAlternateOpacity)
+                : null;
             String sourceLabel = '—';
             String? sourceRoute;
             if (m.sourceDocumentType == 'receipt') {
@@ -334,6 +343,7 @@ class _StockMovementsGrid extends StatelessWidget {
               sourceRoute = '/${AppRoutes.pathShipments}/${m.sourceDocumentId}';
             }
             return DataRow(
+              color: WidgetStateProperty.all(subtleStrip),
               selected: selected,
               cells: [
                 DataCell(
@@ -409,6 +419,8 @@ class _StockMovementsGrid extends StatelessWidget {
         ),
       ),
     ),
+    );
+      },
     );
   }
 }

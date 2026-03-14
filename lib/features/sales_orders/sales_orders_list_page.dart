@@ -275,16 +275,19 @@ class _SalesOrdersGrid extends StatelessWidget {
     final headerStyle = ListLayoutConstants.tableHeaderStyle(theme);
     final allSelected =
         orders.isNotEmpty && selectedIds.length == orders.length;
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(ListLayoutConstants.tableSurfaceBorderRadius),
-        border: Border.all(
-          color: theme.colorScheme.outline.withValues(alpha: ListLayoutConstants.tableSurfaceBorderOpacity),
-        ),
-        color: theme.colorScheme.surfaceContainerLowest.withValues(alpha: ListLayoutConstants.tableSurfaceBackgroundOpacity),
-      ),
-      clipBehavior: Clip.antiAlias,
-      child: SingleChildScrollView(
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return Container(
+          width: constraints.maxWidth,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(ListLayoutConstants.tableSurfaceBorderRadius),
+            border: Border.all(
+              color: theme.colorScheme.outline.withValues(alpha: ListLayoutConstants.tableSurfaceBorderOpacity),
+            ),
+            color: theme.colorScheme.surfaceContainerLowest.withValues(alpha: ListLayoutConstants.tableSurfaceBackgroundOpacity),
+          ),
+          clipBehavior: Clip.antiAlias,
+          child: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: SingleChildScrollView(
           scrollDirection: Axis.horizontal,
@@ -312,11 +315,18 @@ class _SalesOrdersGrid extends StatelessWidget {
               DataColumn(label: Text('Warehouse', style: headerStyle)),
               DataColumn(label: Text('Status', style: headerStyle)),
             ],
-          rows: orders.map((o) {
+          rows: orders.asMap().entries.map((entry) {
+            final index = entry.key;
+            final o = entry.value;
             final selected = selectedIds.contains(o.id);
             final customer = customersRepository.getById(o.customerId);
             final warehouse = warehousesRepository.getById(o.warehouseId);
+            final subtleStrip = index.isOdd
+                ? theme.colorScheme.surfaceContainerHighest
+                    .withValues(alpha: ListLayoutConstants.tableRowAlternateOpacity)
+                : null;
             return DataRow(
+              color: WidgetStateProperty.all(subtleStrip),
               selected: selected,
               cells: [
                 DataCell(
@@ -371,6 +381,8 @@ class _SalesOrdersGrid extends StatelessWidget {
         ),
       ),
     ),
+    );
+      },
     );
   }
 

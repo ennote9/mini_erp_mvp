@@ -277,16 +277,19 @@ class _ItemsGrid extends StatelessWidget {
     final theme = Theme.of(context);
     final allSelected = items.isNotEmpty && selectedIds.length == items.length;
     final headerStyle = ListLayoutConstants.tableHeaderStyle(theme);
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(ListLayoutConstants.tableSurfaceBorderRadius),
-        border: Border.all(
-          color: theme.colorScheme.outline.withValues(alpha: ListLayoutConstants.tableSurfaceBorderOpacity),
-        ),
-        color: theme.colorScheme.surfaceContainerLowest.withValues(alpha: ListLayoutConstants.tableSurfaceBackgroundOpacity),
-      ),
-      clipBehavior: Clip.antiAlias,
-      child: SingleChildScrollView(
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return Container(
+          width: constraints.maxWidth,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(ListLayoutConstants.tableSurfaceBorderRadius),
+            border: Border.all(
+              color: theme.colorScheme.outline.withValues(alpha: ListLayoutConstants.tableSurfaceBorderOpacity),
+            ),
+            color: theme.colorScheme.surfaceContainerLowest.withValues(alpha: ListLayoutConstants.tableSurfaceBackgroundOpacity),
+          ),
+          clipBehavior: Clip.antiAlias,
+          child: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: SingleChildScrollView(
           scrollDirection: Axis.horizontal,
@@ -313,9 +316,16 @@ class _ItemsGrid extends StatelessWidget {
               DataColumn(label: Text('UOM', style: headerStyle)),
               DataColumn(label: Text('Active', style: headerStyle)),
             ],
-          rows: items.map((item) {
+          rows: items.asMap().entries.map((entry) {
+            final index = entry.key;
+            final item = entry.value;
             final selected = selectedIds.contains(item.id);
+            final subtleStrip = index.isOdd
+                ? theme.colorScheme.surfaceContainerHighest
+                    .withValues(alpha: ListLayoutConstants.tableRowAlternateOpacity)
+                : null;
             return DataRow(
+              color: WidgetStateProperty.all(subtleStrip),
               selected: selected,
               cells: [
                 DataCell(
@@ -362,6 +372,8 @@ class _ItemsGrid extends StatelessWidget {
         ),
       ),
     ),
+    );
+      },
     );
   }
 }

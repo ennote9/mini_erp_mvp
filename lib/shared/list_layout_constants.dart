@@ -8,6 +8,12 @@ class ListLayoutConstants {
 
   // ----- Workspace composition -----
   static const double maxListContentWidth = 1600;
+  static const double workspacePanelPadding = 24;
+  static const double workspacePanelBorderRadius = 10;
+  static const double workspacePanelBackgroundOpacity = 0.38;
+  static const double workspacePanelBorderOpacity = 0.18;
+  /// Alternating row tint for body rows (reference-style).
+  static const double tableRowAlternateOpacity = 0.1;
 
   // ----- Controls bar / toolbar -----
   static const double horizontalPadding = 24;
@@ -27,8 +33,8 @@ class ListLayoutConstants {
 
   // ----- Table surface -----
   static const double tableSurfaceBorderRadius = 8;
-  static const double tableSurfaceBorderOpacity = 0.26;
-  static const double tableSurfaceBackgroundOpacity = 0.22;
+  static const double tableSurfaceBorderOpacity = 0.35;
+  static const double tableSurfaceBackgroundOpacity = 0.32;
 
   // ----- Table rhythm (list pages override theme for alignment) -----
   static const double tableHeadingRowHeight = 40;
