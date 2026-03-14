@@ -9,6 +9,14 @@ import '../warehouses/data/warehouses_repository.dart';
 import 'data/purchase_order.dart';
 import 'data/purchase_orders_repository.dart';
 
+/// Display PO date in dd.MM.yyyy format; "—" if invalid.
+String _displayPoDate(String? s) {
+  if (s == null || s.trim().isEmpty) return '—';
+  final d = DateTime.tryParse(s.trim());
+  if (d == null || d.year < 1900 || d.year > 2100) return '—';
+  return '${d.day.toString().padLeft(2, '0')}.${d.month.toString().padLeft(2, '0')}.${d.year}';
+}
+
 /// Purchase Orders list page. Real grid, search, status filter, row click, New.
 /// Docs: 08_Screens_v1, 11_List_Page_Pattern_v1, 19_Data_Grid_Column_Definitions_v1, 20_Grid_Interaction_Rules_v1.
 class PurchaseOrdersListPage extends StatefulWidget {
@@ -272,7 +280,7 @@ class _PurchaseOrdersGrid extends StatelessWidget {
                   ),
                 ),
                 DataCell(Text(o.number), onTap: () => onRowTap(o)),
-                DataCell(Text(o.date), onTap: () => onRowTap(o)),
+                DataCell(Text(_displayPoDate(o.date)), onTap: () => onRowTap(o)),
                 DataCell(
                   Text(supplier?.name ?? o.supplierId),
                   onTap: () => onRowTap(o),

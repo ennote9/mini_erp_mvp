@@ -200,6 +200,7 @@ class _WarehousePageState extends State<WarehousePage> {
             breadcrumb: AppBreadcrumb(
               segments: ['Master Data', 'Warehouses', widget.id!],
             ),
+            backFallbackRoute: '/${AppRoutes.pathWarehouses}',
           ),
           const Divider(height: 1),
           const Expanded(child: Center(child: Text('Warehouse not found'))),
@@ -214,6 +215,7 @@ class _WarehousePageState extends State<WarehousePage> {
         AppPageHeader(
           title: _title,
           breadcrumb: AppBreadcrumb(segments: _breadcrumbSegments),
+          backFallbackRoute: '/${AppRoutes.pathWarehouses}',
           actions: [
             FilledButton(onPressed: _save, child: const Text('Save')),
             const SizedBox(width: 8),

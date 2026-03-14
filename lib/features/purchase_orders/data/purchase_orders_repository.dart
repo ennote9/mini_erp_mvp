@@ -101,6 +101,15 @@ class PurchaseOrdersRepository {
     }
   }
 
+  /// Set Purchase Order to Closed (e.g. after Receipt is Posted). Called by ReceiptsRepository.
+  void close(String orderId) {
+    final o = _orders[orderId];
+    if (o != null && o.isConfirmed) {
+      _orders[orderId] = o.copyWith(status: 'closed');
+      version.value++;
+    }
+  }
+
   bool _isSupplierActive(String supplierId) {
     final s = suppliersRepository.getById(supplierId);
     return s != null && s.isActive;
@@ -125,6 +134,10 @@ class PurchaseOrdersRepository {
     String? excludeOrderId,
   }) {
     if (date.trim().isEmpty) return 'Date is required';
+    final parsed = DateTime.tryParse(date.trim());
+    if (parsed == null || parsed.year < 1900 || parsed.year > 2100) {
+      return 'Date must be a valid date';
+    }
     if (supplierId.trim().isEmpty) return 'Supplier is required';
     if (warehouseId.trim().isEmpty) return 'Warehouse is required';
     if (!_isSupplierActive(supplierId)) return 'Supplier must be active';
@@ -140,8 +153,6 @@ class PurchaseOrdersRepository {
     return null;
   }
 
-  /// Can show Create Receipt (placeholder). In MVP without Receipts, always false.
-  bool canCreateReceipt(String orderId) => false;
 }
 
 /// Single in-memory instance.

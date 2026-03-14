@@ -9,9 +9,14 @@ import 'sidebar_item.dart';
 /// Left sidebar: expanded/collapsed, grouped navigation, active route highlighting.
 /// Docs: 09_Navigation_and_App_Shell_v1.md (Sidebar structure and behavior)
 class AppSidebar extends StatelessWidget {
-  const AppSidebar({super.key, required this.isExpanded});
+  const AppSidebar({
+    super.key,
+    required this.isExpanded,
+    this.onCollapseToggle,
+  });
 
   final bool isExpanded;
+  final VoidCallback? onCollapseToggle;
 
   static bool _isActive(String location, String path) {
     if (path == '/${AppRoutes.pathDashboard}') {
@@ -51,7 +56,7 @@ class AppSidebar extends StatelessWidget {
           SidebarGroup(
             label: 'Master Data',
             icon: Icons.folder_outlined,
-            initiallyExpanded: true,
+            initiallyExpanded: false,
             children: [
               SidebarItem(
                 icon: Icons.inventory_2_outlined,
@@ -96,7 +101,7 @@ class AppSidebar extends StatelessWidget {
           SidebarGroup(
             label: 'Purchasing',
             icon: Icons.shopping_cart_outlined,
-            initiallyExpanded: true,
+            initiallyExpanded: false,
             children: [
               SidebarItem(
                 icon: Icons.description_outlined,
@@ -123,7 +128,7 @@ class AppSidebar extends StatelessWidget {
           SidebarGroup(
             label: 'Sales',
             icon: Icons.sell_outlined,
-            initiallyExpanded: true,
+            initiallyExpanded: false,
             children: [
               SidebarItem(
                 icon: Icons.description_outlined,
@@ -150,7 +155,7 @@ class AppSidebar extends StatelessWidget {
           SidebarGroup(
             label: 'Inventory',
             icon: Icons.inventory_outlined,
-            initiallyExpanded: true,
+            initiallyExpanded: false,
             children: [
               SidebarItem(
                 icon: Icons.balance_outlined,
@@ -168,6 +173,26 @@ class AppSidebar extends StatelessWidget {
               ),
             ],
           ),
+          const Spacer(),
+          if (onCollapseToggle != null)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 14),
+              child: IconButton(
+                icon: Icon(
+                  isExpanded ? Icons.chevron_left : Icons.chevron_right,
+                  size: 20,
+                ),
+                onPressed: onCollapseToggle,
+                style: IconButton.styleFrom(
+                  minimumSize: const Size(28, 28),
+                  padding: EdgeInsets.zero,
+                  backgroundColor: Theme.of(context)
+                      .colorScheme
+                      .surfaceContainerHighest
+                      .withValues(alpha: 0.8),
+                ),
+              ),
+            ),
         ],
       ),
     );

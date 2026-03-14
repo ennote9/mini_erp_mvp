@@ -22,30 +22,10 @@ class _AppShellState extends State<AppShell> {
     return Scaffold(
       body: Row(
         children: [
-          AppSidebar(isExpanded: _sidebarExpanded),
-          Align(
-            alignment: Alignment.topCenter,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 14),
-              child: IconButton(
-                icon: Icon(
-                  _sidebarExpanded
-                      ? Icons.chevron_left
-                      : Icons.chevron_right,
-                  size: 20,
-                ),
-                onPressed: () =>
-                    setState(() => _sidebarExpanded = !_sidebarExpanded),
-                style: IconButton.styleFrom(
-                  minimumSize: const Size(28, 28),
-                  padding: EdgeInsets.zero,
-                  backgroundColor: Theme.of(context)
-                      .colorScheme
-                      .surfaceContainerHighest
-                      .withValues(alpha: 0.8),
-                ),
-              ),
-            ),
+          AppSidebar(
+            isExpanded: _sidebarExpanded,
+            onCollapseToggle: () =>
+                setState(() => _sidebarExpanded = !_sidebarExpanded),
           ),
           Expanded(child: PageFrame(child: widget.child)),
         ],

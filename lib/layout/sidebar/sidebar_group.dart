@@ -46,7 +46,8 @@ class _SidebarGroupState extends State<SidebarGroup> {
           onTap: () => setState(() => _expanded = !_expanded),
           child: LayoutBuilder(
             builder: (context, constraints) {
-              final narrow = constraints.maxWidth < 48;
+              // Collapsed sidebar is 56px; full row needs icon(18)+spacer(10)+label+chevron(16) > 44px.
+              final narrow = constraints.maxWidth < 60;
               if (narrow) {
                 return Padding(
                   padding: const EdgeInsets.symmetric(vertical: 6),

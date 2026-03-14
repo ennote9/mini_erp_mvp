@@ -216,6 +216,7 @@ class _CustomerPageState extends State<CustomerPage> {
             breadcrumb: AppBreadcrumb(
               segments: ['Master Data', 'Customers', widget.id!],
             ),
+            backFallbackRoute: '/${AppRoutes.pathCustomers}',
           ),
           const Divider(height: 1),
           const Expanded(child: Center(child: Text('Customer not found'))),
@@ -230,6 +231,7 @@ class _CustomerPageState extends State<CustomerPage> {
         AppPageHeader(
           title: _title,
           breadcrumb: AppBreadcrumb(segments: _breadcrumbSegments),
+          backFallbackRoute: '/${AppRoutes.pathCustomers}',
           actions: [
             FilledButton(onPressed: _save, child: const Text('Save')),
             const SizedBox(width: 8),

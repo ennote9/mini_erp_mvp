@@ -216,6 +216,7 @@ class _SupplierPageState extends State<SupplierPage> {
             breadcrumb: AppBreadcrumb(
               segments: ['Master Data', 'Suppliers', widget.id!],
             ),
+            backFallbackRoute: '/${AppRoutes.pathSuppliers}',
           ),
           const Divider(height: 1),
           const Expanded(child: Center(child: Text('Supplier not found'))),
@@ -230,6 +231,7 @@ class _SupplierPageState extends State<SupplierPage> {
         AppPageHeader(
           title: _title,
           breadcrumb: AppBreadcrumb(segments: _breadcrumbSegments),
+          backFallbackRoute: '/${AppRoutes.pathSuppliers}',
           actions: [
             FilledButton(onPressed: _save, child: const Text('Save')),
             const SizedBox(width: 8),
