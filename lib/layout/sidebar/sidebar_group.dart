@@ -42,44 +42,46 @@ class _SidebarGroupState extends State<SidebarGroup> {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        InkWell(
-          onTap: () => setState(() => _expanded = !_expanded),
-          child: LayoutBuilder(
-            builder: (context, constraints) {
-              // Collapsed sidebar is 56px; full row needs icon(18)+spacer(10)+label+chevron(16) > 44px.
-              final narrow = constraints.maxWidth < 60;
-              if (narrow) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 6),
-                  child: Center(
-                    child: Icon(widget.icon, size: 18, color: textColor),
-                  ),
-                );
-              }
+        LayoutBuilder(
+          builder: (context, constraints) {
+            final narrow = constraints.maxWidth < 60;
+            if (narrow) {
               return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                child: Center(
+                  child: Icon(widget.icon, size: 20, color: textColor),
+                ),
+              );
+            }
+            // Expanded: section label row (quiet, structural)
+            return InkWell(
+              onTap: () => setState(() => _expanded = !_expanded),
+              splashColor: Colors.transparent,
+              highlightColor: Colors.transparent,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 child: Row(
                   children: [
-                    Icon(widget.icon, size: 18, color: textColor),
+                    Icon(widget.icon, size: 16, color: textColor),
                     if (widget.children.isNotEmpty) ...[
                       const SizedBox(width: 10),
                       Expanded(
                         child: Text(
                           widget.label,
                           style: TextStyle(
-                            fontSize: 11,
+                            fontSize: 10,
                             fontWeight: FontWeight.w600,
-                            color: textColor,
-                            letterSpacing: 0.3,
+                            color: textColor.withValues(alpha: 0.9),
+                            letterSpacing: 0.5,
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
                       Icon(
-                        _expanded ? Icons.expand_less : Icons.expand_more,
+                        _expanded ? Icons.expand_less_rounded : Icons.expand_more_rounded,
                         size: 16,
-                        color: textColor,
+                        color: textColor.withValues(alpha: 0.8),
                       ),
                     ] else ...[
                       const SizedBox(width: 10),
@@ -100,13 +102,13 @@ class _SidebarGroupState extends State<SidebarGroup> {
                     ],
                   ],
                 ),
-              );
-            },
-          ),
+              ),
+            );
+          },
         ),
         if (_expanded && widget.children.isNotEmpty)
           Padding(
-            padding: const EdgeInsets.only(left: 16),
+            padding: const EdgeInsets.only(left: 20, top: 2),
             child: Column(children: widget.children),
           ),
       ],

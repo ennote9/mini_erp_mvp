@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 import '../../core/router/app_routes.dart';
 import '../../shared/app_page_header.dart';
 import '../../shared/app_placeholder_state.dart';
+import '../../shared/list_layout_constants.dart';
+import '../../shared/list_page_workspace.dart';
 import '../suppliers/data/suppliers_repository.dart';
 import '../warehouses/data/warehouses_repository.dart';
 import 'data/purchase_order.dart';
@@ -78,37 +80,47 @@ class _PurchaseOrdersListPageState extends State<PurchaseOrdersListPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        AppPageHeader(
-          title: 'Purchase Orders',
-          actions: [
-            FilledButton.icon(
-              onPressed: () => context
-                  .go('/${AppRoutes.pathPurchaseOrders}/${AppRoutes.pathNew}'),
-              icon: const Icon(Icons.add, size: 18),
-              label: const Text('New'),
+    final theme = Theme.of(context);
+    return ListPageWorkspace(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          AppPageHeader(
+            title: 'Purchase Orders',
+            actions: [
+              FilledButton.icon(
+                onPressed: () => context
+                    .go('/${AppRoutes.pathPurchaseOrders}/${AppRoutes.pathNew}'),
+                icon: const Icon(Icons.add, size: 18),
+                label: const Text('New'),
+              ),
+            ],
+          ),
+          Divider(height: 1, thickness: 1, color: theme.dividerColor.withValues(alpha: 0.8)),
+          Container(
+            color: theme.colorScheme.surfaceContainerLowest.withValues(alpha: 0.35),
+            child: _ControlsBar(
+              searchController: _searchController,
+              statusFilter: _statusFilter,
+              onFilterChanged: (v) => setState(() {
+                _statusFilter = v;
+                _orders = _repo.search(query: _searchQuery, statusFilter: v);
+              }),
             ),
-          ],
-        ),
-        const Divider(height: 1),
-        _ControlsBar(
-          searchController: _searchController,
-          statusFilter: _statusFilter,
-          onFilterChanged: (v) => setState(() {
-            _statusFilter = v;
-            _orders = _repo.search(query: _searchQuery, statusFilter: v);
-          }),
-        ),
-        const Divider(height: 1),
-        Expanded(
-          child: _loading
-              ? const Center(child: CircularProgressIndicator())
-              : _buildContent(),
-        ),
-      ],
+          ),
+          Divider(height: 1, thickness: 1, color: theme.dividerColor.withValues(alpha: 0.8)),
+          Expanded(
+            child: _loading
+                ? const Center(child: CircularProgressIndicator())
+                : Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: ListLayoutConstants.horizontalPadding),
+                    child: _buildContent(),
+                  ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -164,56 +176,81 @@ class _ControlsBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+      padding: const EdgeInsets.symmetric(
+        horizontal: ListLayoutConstants.horizontalPadding,
+        vertical: ListLayoutConstants.toolbarVerticalPadding,
+      ),
       child: Row(
         children: [
-          SizedBox(
-            width: 240,
-            height: 36,
-            child: TextField(
-              controller: searchController,
-              decoration: const InputDecoration(
-                hintText: 'Search by number',
-                isDense: true,
-                border: OutlineInputBorder(),
-                contentPadding: EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 8,
-                ),
-              ),
+          Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: ListLayoutConstants.toolbarClusterPaddingH,
+              vertical: ListLayoutConstants.toolbarClusterPaddingV,
             ),
-          ),
-          const SizedBox(width: 16),
-          Row(
-            children: [
-              ChoiceChip(
-                label: const Text('All'),
-                selected: statusFilter == null,
-                onSelected: (_) => onFilterChanged(null),
-              ),
-              const SizedBox(width: 8),
-              ChoiceChip(
-                label: const Text('Draft'),
-                selected: statusFilter == 'draft',
-                onSelected: (v) =>
-                    onFilterChanged(v ? 'draft' : null),
-              ),
-              const SizedBox(width: 8),
-              ChoiceChip(
-                label: const Text('Confirmed'),
-                selected: statusFilter == 'confirmed',
-                onSelected: (v) =>
-                    onFilterChanged(v ? 'confirmed' : null),
-              ),
-              const SizedBox(width: 8),
-              ChoiceChip(
-                label: const Text('Cancelled'),
-                selected: statusFilter == 'cancelled',
-                onSelected: (v) =>
-                    onFilterChanged(v ? 'cancelled' : null),
-              ),
-            ],
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(ListLayoutConstants.toolbarClusterBorderRadius),
+              color: theme.colorScheme.surfaceContainerLowest.withValues(alpha: ListLayoutConstants.toolbarClusterBackgroundOpacity),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SizedBox(
+                  width: ListLayoutConstants.searchFieldWidth,
+                  height: ListLayoutConstants.searchFieldHeight,
+                  child: TextField(
+                    controller: searchController,
+                    decoration: const InputDecoration(
+                      hintText: 'Search by number',
+                      isDense: true,
+                      border: OutlineInputBorder(),
+                      contentPadding: EdgeInsets.symmetric(
+                        horizontal: ListLayoutConstants.searchContentPaddingH,
+                        vertical: ListLayoutConstants.searchContentPaddingV,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: ListLayoutConstants.gapSearchToFilters),
+                Row(
+                  children: [
+                    ChoiceChip(
+                      label: const Text('All'),
+                      selected: statusFilter == null,
+                      onSelected: (_) => onFilterChanged(null),
+                    ),
+                    const SizedBox(width: ListLayoutConstants.gapBetweenChips),
+                    ChoiceChip(
+                      label: const Text('Draft'),
+                      selected: statusFilter == 'draft',
+                      onSelected: (v) =>
+                          onFilterChanged(v ? 'draft' : null),
+                    ),
+                    const SizedBox(width: ListLayoutConstants.gapBetweenChips),
+                    ChoiceChip(
+                      label: const Text('Confirmed'),
+                      selected: statusFilter == 'confirmed',
+                      onSelected: (v) =>
+                          onFilterChanged(v ? 'confirmed' : null),
+                    ),
+                    const SizedBox(width: ListLayoutConstants.gapBetweenChips),
+                    ChoiceChip(
+                      label: const Text('Closed'),
+                      selected: statusFilter == 'closed',
+                      onSelected: (v) => onFilterChanged(v ? 'closed' : null),
+                    ),
+                    const SizedBox(width: ListLayoutConstants.gapBetweenChips),
+                    ChoiceChip(
+                      label: const Text('Cancelled'),
+                      selected: statusFilter == 'cancelled',
+                      onSelected: (v) =>
+                          onFilterChanged(v ? 'cancelled' : null),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ],
       ),
@@ -238,33 +275,47 @@ class _PurchaseOrdersGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final headerStyle = ListLayoutConstants.tableHeaderStyle(theme);
     final allSelected =
         orders.isNotEmpty && selectedIds.length == orders.length;
-    return SingleChildScrollView(
-      scrollDirection: Axis.vertical,
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(ListLayoutConstants.tableSurfaceBorderRadius),
+        border: Border.all(
+          color: theme.colorScheme.outline.withValues(alpha: ListLayoutConstants.tableSurfaceBorderOpacity),
+        ),
+        color: theme.colorScheme.surfaceContainerLowest.withValues(alpha: ListLayoutConstants.tableSurfaceBackgroundOpacity),
+      ),
+      clipBehavior: Clip.antiAlias,
       child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: DataTable(
-          headingRowColor: WidgetStateProperty.resolveWith((states) {
-            return Theme.of(context)
-                .colorScheme
-                .surfaceContainerHighest
-                .withValues(alpha: 0.5);
-          }),
-          columns: [
-            DataColumn(
-              label: Checkbox(
-                value: allSelected,
-                tristate: true,
-                onChanged: (v) => onSelectAll(v == true),
+        scrollDirection: Axis.vertical,
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: DataTable(
+            headingRowHeight: ListLayoutConstants.tableHeadingRowHeight,
+            dataRowMinHeight: ListLayoutConstants.tableDataRowHeight,
+            dataRowMaxHeight: ListLayoutConstants.tableDataRowHeight,
+            columnSpacing: ListLayoutConstants.tableColumnSpacing,
+            horizontalMargin: ListLayoutConstants.tableHorizontalMargin,
+            headingRowColor: WidgetStateProperty.resolveWith((states) {
+              return theme.colorScheme.surfaceContainerHighest
+                  .withValues(alpha: ListLayoutConstants.tableHeaderBackgroundOpacity);
+            }),
+            columns: [
+              DataColumn(
+                label: Checkbox(
+                  value: allSelected,
+                  tristate: true,
+                  onChanged: (v) => onSelectAll(v == true),
+                ),
               ),
-            ),
-            const DataColumn(label: Text('Number')),
-            DataColumn(label: Text('Date')),
-            DataColumn(label: Text('Supplier')),
-            DataColumn(label: Text('Warehouse')),
-            DataColumn(label: Text('Status')),
-          ],
+              DataColumn(label: Text('Number', style: headerStyle)),
+              DataColumn(label: Text('Date', style: headerStyle)),
+              DataColumn(label: Text('Supplier', style: headerStyle)),
+              DataColumn(label: Text('Warehouse', style: headerStyle)),
+              DataColumn(label: Text('Status', style: headerStyle)),
+            ],
           rows: orders.map((o) {
             final selected = selectedIds.contains(o.id);
             final supplier = suppliersRepository.getById(o.supplierId);
@@ -279,18 +330,44 @@ class _PurchaseOrdersGrid extends StatelessWidget {
                         onSelectionChanged(o.id, v ?? false),
                   ),
                 ),
-                DataCell(Text(o.number), onTap: () => onRowTap(o)),
-                DataCell(Text(_displayPoDate(o.date)), onTap: () => onRowTap(o)),
                 DataCell(
-                  Text(supplier?.name ?? o.supplierId),
+                  ConstrainedBox(
+                    constraints: const BoxConstraints(
+                        minWidth: ListLayoutConstants.minColNumber),
+                    child: Text(o.number),
+                  ),
                   onTap: () => onRowTap(o),
                 ),
                 DataCell(
-                  Text(warehouse?.name ?? o.warehouseId),
+                  ConstrainedBox(
+                    constraints: const BoxConstraints(
+                        minWidth: ListLayoutConstants.minColDate),
+                    child: Text(_displayPoDate(o.date)),
+                  ),
                   onTap: () => onRowTap(o),
                 ),
                 DataCell(
-                  Text(_statusLabel(o.status)),
+                  ConstrainedBox(
+                    constraints: const BoxConstraints(
+                        minWidth: ListLayoutConstants.minColRelation),
+                    child: Text(supplier?.name ?? o.supplierId),
+                  ),
+                  onTap: () => onRowTap(o),
+                ),
+                DataCell(
+                  ConstrainedBox(
+                    constraints: const BoxConstraints(
+                        minWidth: ListLayoutConstants.minColRelation),
+                    child: Text(warehouse?.name ?? o.warehouseId),
+                  ),
+                  onTap: () => onRowTap(o),
+                ),
+                DataCell(
+                  ConstrainedBox(
+                    constraints: const BoxConstraints(
+                        minWidth: ListLayoutConstants.minColStatus),
+                    child: Text(_statusLabel(o.status)),
+                  ),
                   onTap: () => onRowTap(o),
                 ),
               ],
@@ -298,6 +375,7 @@ class _PurchaseOrdersGrid extends StatelessWidget {
           }).toList(),
         ),
       ),
+    ),
     );
   }
 

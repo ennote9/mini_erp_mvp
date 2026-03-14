@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 import '../../core/router/app_routes.dart';
 import '../../shared/app_page_header.dart';
 import '../../shared/app_placeholder_state.dart';
+import '../../shared/list_layout_constants.dart';
+import '../../shared/list_page_workspace.dart';
 import '../items/data/items_repository.dart';
 import '../receipts/data/receipts_repository.dart';
 import '../shipments/data/shipments_repository.dart';
@@ -103,29 +105,39 @@ class _StockMovementsListPageState extends State<StockMovementsListPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        const AppPageHeader(title: 'Stock Movements'),
-        const Divider(height: 1),
-        _ControlsBar(
-          searchController: _searchController,
-          movementTypeFilter: _movementTypeFilter,
-          onMovementTypeFilterChanged: (v) => setState(() {
-            _movementTypeFilter = v;
-            _movements = _repo.search(movementType: v);
-            _searchQuery = _searchController.text.trim().toLowerCase();
-            _movements = _movements.where(_matchesSearch).toList();
-          }),
-        ),
-        const Divider(height: 1),
-        Expanded(
-          child: _loading
-              ? const Center(child: CircularProgressIndicator())
-              : _buildContent(),
-        ),
-      ],
+    final theme = Theme.of(context);
+    return ListPageWorkspace(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const AppPageHeader(title: 'Stock Movements'),
+          Divider(height: 1, thickness: 1, color: theme.dividerColor.withValues(alpha: 0.8)),
+          Container(
+            color: theme.colorScheme.surfaceContainerLowest.withValues(alpha: 0.35),
+            child: _ControlsBar(
+              searchController: _searchController,
+              movementTypeFilter: _movementTypeFilter,
+              onMovementTypeFilterChanged: (v) => setState(() {
+                _movementTypeFilter = v;
+                _movements = _repo.search(movementType: v);
+                _searchQuery = _searchController.text.trim().toLowerCase();
+                _movements = _movements.where(_matchesSearch).toList();
+              }),
+            ),
+          ),
+          Divider(height: 1, thickness: 1, color: theme.dividerColor.withValues(alpha: 0.8)),
+          Expanded(
+            child: _loading
+                ? const Center(child: CircularProgressIndicator())
+                : Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: ListLayoutConstants.horizontalPadding),
+                    child: _buildContent(),
+                  ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -175,49 +187,68 @@ class _ControlsBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+      padding: const EdgeInsets.symmetric(
+        horizontal: ListLayoutConstants.horizontalPadding,
+        vertical: ListLayoutConstants.toolbarVerticalPadding,
+      ),
       child: Row(
         children: [
-          SizedBox(
-            width: 240,
-            height: 36,
-            child: TextField(
-              controller: searchController,
-              decoration: const InputDecoration(
-                hintText: 'Search by item or document number',
-                isDense: true,
-                border: OutlineInputBorder(),
-                contentPadding: EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 8,
-                ),
-              ),
+          Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: ListLayoutConstants.toolbarClusterPaddingH,
+              vertical: ListLayoutConstants.toolbarClusterPaddingV,
             ),
-          ),
-          const SizedBox(width: 16),
-          Row(
-            children: [
-              ChoiceChip(
-                label: const Text('All'),
-                selected: movementTypeFilter == null,
-                onSelected: (_) => onMovementTypeFilterChanged(null),
-              ),
-              const SizedBox(width: 8),
-              ChoiceChip(
-                label: const Text('Receipt'),
-                selected: movementTypeFilter == 'receipt',
-                onSelected: (v) =>
-                    onMovementTypeFilterChanged(v ? 'receipt' : null),
-              ),
-              const SizedBox(width: 8),
-              ChoiceChip(
-                label: const Text('Shipment'),
-                selected: movementTypeFilter == 'shipment',
-                onSelected: (v) =>
-                    onMovementTypeFilterChanged(v ? 'shipment' : null),
-              ),
-            ],
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(ListLayoutConstants.toolbarClusterBorderRadius),
+              color: theme.colorScheme.surfaceContainerLowest.withValues(alpha: ListLayoutConstants.toolbarClusterBackgroundOpacity),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SizedBox(
+                  width: ListLayoutConstants.searchFieldWidth,
+                  height: ListLayoutConstants.searchFieldHeight,
+                  child: TextField(
+                    controller: searchController,
+                    decoration: const InputDecoration(
+                      hintText: 'Search by item or document number',
+                      isDense: true,
+                      border: OutlineInputBorder(),
+                      contentPadding: EdgeInsets.symmetric(
+                        horizontal: ListLayoutConstants.searchContentPaddingH,
+                        vertical: ListLayoutConstants.searchContentPaddingV,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: ListLayoutConstants.gapSearchToFilters),
+                Row(
+                  children: [
+                    ChoiceChip(
+                      label: const Text('All'),
+                      selected: movementTypeFilter == null,
+                      onSelected: (_) => onMovementTypeFilterChanged(null),
+                    ),
+                    const SizedBox(width: ListLayoutConstants.gapBetweenChips),
+                    ChoiceChip(
+                      label: const Text('Receipt'),
+                      selected: movementTypeFilter == 'receipt',
+                      onSelected: (v) =>
+                          onMovementTypeFilterChanged(v ? 'receipt' : null),
+                    ),
+                    const SizedBox(width: ListLayoutConstants.gapBetweenChips),
+                    ChoiceChip(
+                      label: const Text('Shipment'),
+                      selected: movementTypeFilter == 'shipment',
+                      onSelected: (v) =>
+                          onMovementTypeFilterChanged(v ? 'shipment' : null),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ],
       ),
@@ -240,35 +271,49 @@ class _StockMovementsGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final headerStyle = ListLayoutConstants.tableHeaderStyle(theme);
     final allSelected =
         movements.isNotEmpty && selectedIds.length == movements.length;
-    return SingleChildScrollView(
-      scrollDirection: Axis.vertical,
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(ListLayoutConstants.tableSurfaceBorderRadius),
+        border: Border.all(
+          color: theme.colorScheme.outline.withValues(alpha: ListLayoutConstants.tableSurfaceBorderOpacity),
+        ),
+        color: theme.colorScheme.surfaceContainerLowest.withValues(alpha: ListLayoutConstants.tableSurfaceBackgroundOpacity),
+      ),
+      clipBehavior: Clip.antiAlias,
       child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: DataTable(
-          headingRowColor: WidgetStateProperty.resolveWith((states) {
-            return Theme.of(context)
-                .colorScheme
-                .surfaceContainerHighest
-                .withValues(alpha: 0.5);
-          }),
-          columns: [
-            DataColumn(
-              label: Checkbox(
-                value: allSelected,
-                tristate: true,
-                onChanged: (v) => onSelectAll(v == true),
+        scrollDirection: Axis.vertical,
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: DataTable(
+            headingRowHeight: ListLayoutConstants.tableHeadingRowHeight,
+            dataRowMinHeight: ListLayoutConstants.tableDataRowHeight,
+            dataRowMaxHeight: ListLayoutConstants.tableDataRowHeight,
+            columnSpacing: ListLayoutConstants.tableColumnSpacing,
+            horizontalMargin: ListLayoutConstants.tableHorizontalMargin,
+            headingRowColor: WidgetStateProperty.resolveWith((states) {
+              return theme.colorScheme.surfaceContainerHighest
+                  .withValues(alpha: ListLayoutConstants.tableHeaderBackgroundOpacity);
+            }),
+            columns: [
+              DataColumn(
+                label: Checkbox(
+                  value: allSelected,
+                  tristate: true,
+                  onChanged: (v) => onSelectAll(v == true),
+                ),
               ),
-            ),
-            const DataColumn(label: Text('Date/Time')),
-            const DataColumn(label: Text('Movement Type')),
-            const DataColumn(label: Text('Item Code')),
-            const DataColumn(label: Text('Item Name')),
-            const DataColumn(label: Text('Warehouse')),
-            const DataColumn(label: Text('Qty Delta')),
-            const DataColumn(label: Text('Source Document')),
-          ],
+              DataColumn(label: Text('Date/Time', style: headerStyle)),
+              DataColumn(label: Text('Movement Type', style: headerStyle)),
+              DataColumn(label: Text('Item Code', style: headerStyle)),
+              DataColumn(label: Text('Item Name', style: headerStyle)),
+              DataColumn(label: Text('Warehouse', style: headerStyle)),
+              DataColumn(label: Text('Qty Delta', style: headerStyle)),
+              DataColumn(label: Text('Source Document', style: headerStyle)),
+            ],
           rows: movements.map((m) {
             final selected = selectedIds.contains(m.id);
             final item = itemsRepository.getById(m.itemId);
@@ -297,31 +342,73 @@ class _StockMovementsGrid extends StatelessWidget {
                     onChanged: (v) => onSelectionChanged(m.id, v ?? false),
                   ),
                 ),
-                DataCell(Text(_formatDateTime(m.createdAt))),
-                DataCell(_MovementTypeBadge(movementType: m.movementType)),
-                DataCell(Text(item?.code ?? m.itemId)),
-                DataCell(Text(item?.name ?? '')),
-                DataCell(Text(warehouse?.name ?? m.warehouseId)),
-                DataCell(Text(m.qtyDelta > 0 ? '+${m.qtyDelta}' : '${m.qtyDelta}')),
                 DataCell(
-                  sourceRoute != null
-                      ? InkWell(
-                          onTap: () => context.go(sourceRoute!),
-                          child: Text(
-                            sourceLabel,
-                            style: TextStyle(
-                              color: Theme.of(context).colorScheme.primary,
-                              decoration: TextDecoration.underline,
+                  ConstrainedBox(
+                    constraints: const BoxConstraints(
+                        minWidth: ListLayoutConstants.minColDateTime),
+                    child: Text(_formatDateTime(m.createdAt)),
+                  ),
+                ),
+                DataCell(
+                  ConstrainedBox(
+                    constraints: const BoxConstraints(
+                        minWidth: ListLayoutConstants.minColMovementType),
+                    child: _MovementTypeBadge(movementType: m.movementType),
+                  ),
+                ),
+                DataCell(
+                  ConstrainedBox(
+                    constraints: const BoxConstraints(
+                        minWidth: ListLayoutConstants.minColCode),
+                    child: Text(item?.code ?? m.itemId),
+                  ),
+                ),
+                DataCell(
+                  ConstrainedBox(
+                    constraints: const BoxConstraints(
+                        minWidth: ListLayoutConstants.minColName),
+                    child: Text(item?.name ?? ''),
+                  ),
+                ),
+                DataCell(
+                  ConstrainedBox(
+                    constraints: const BoxConstraints(
+                        minWidth: ListLayoutConstants.minColRelation),
+                    child: Text(warehouse?.name ?? m.warehouseId),
+                  ),
+                ),
+                DataCell(
+                  ConstrainedBox(
+                    constraints: const BoxConstraints(
+                        minWidth: ListLayoutConstants.minColQty),
+                    child: Text(
+                        m.qtyDelta > 0 ? '+${m.qtyDelta}' : '${m.qtyDelta}'),
+                  ),
+                ),
+                DataCell(
+                  ConstrainedBox(
+                    constraints: const BoxConstraints(
+                        minWidth: ListLayoutConstants.minColSourceDocument),
+                    child: sourceRoute != null
+                        ? InkWell(
+                            onTap: () => context.go(sourceRoute!),
+                            child: Text(
+                              sourceLabel,
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.primary,
+                                decoration: TextDecoration.underline,
+                              ),
                             ),
-                          ),
-                        )
-                      : Text(sourceLabel),
+                          )
+                        : Text(sourceLabel),
+                  ),
                 ),
               ],
             );
           }).toList(),
         ),
       ),
+    ),
     );
   }
 }

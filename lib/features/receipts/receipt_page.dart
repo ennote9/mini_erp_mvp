@@ -316,29 +316,39 @@ class _ReceiptPageState extends State<ReceiptPage> {
               ],
             ],
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.surfaceContainerHighest,
-                borderRadius: BorderRadius.circular(4),
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+            decoration: BoxDecoration(
+              color: Theme.of(context)
+                  .colorScheme
+                  .surfaceContainerHighest
+                  .withValues(alpha: 0.35),
+              border: Border(
+                bottom: BorderSide(
+                  color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
+                  width: 1,
+                ),
               ),
-              child: Text(
-                _statusLabel(),
-                style: Theme.of(context).textTheme.labelLarge,
-              ),
+            ),
+            child: Text(
+              _statusLabel(),
+              style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.85),
+                  ),
             ),
           ),
           const Divider(height: 1),
+          const SizedBox(height: 8),
           TabBar(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            labelPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 0),
+            labelPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
             labelColor: Theme.of(context).colorScheme.primary,
             unselectedLabelColor: Theme.of(context)
                 .colorScheme
                 .onSurface
                 .withValues(alpha: 0.7),
+            indicatorColor: Theme.of(context).colorScheme.primary,
             tabs: const [
               Tab(text: 'Overview'),
               Tab(text: 'Lines'),
@@ -349,7 +359,7 @@ class _ReceiptPageState extends State<ReceiptPage> {
             child: TabBarView(
               children: [
                 SingleChildScrollView(
-                  padding: const EdgeInsets.all(24),
+                  padding: const EdgeInsets.fromLTRB(24, 24, 24, 24),
                   child: _ReceiptSummaryBlock(
                     receipt: _receipt!,
                     dateController: _dateController,
@@ -409,18 +419,18 @@ class _ReceiptSummaryBlock extends StatelessWidget {
     final warehouse = warehousesRepository.getById(receipt.warehouseId);
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
       decoration: BoxDecoration(
         border: Border.all(
-          color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.3),
+          color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.25),
         ),
-        borderRadius: BorderRadius.circular(6),
+        borderRadius: BorderRadius.circular(8),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _SummaryRow('Number', receipt.number),
-          const SizedBox(height: 8),
+          const SizedBox(height: 10),
           if (isDraft)
             Container(
               key: dateFieldKey,
@@ -446,13 +456,13 @@ class _ReceiptSummaryBlock extends StatelessWidget {
             )
           else
             _SummaryRow('Date', _isValidDate(receipt.date) ? _displayDate(receipt.date) : '—'),
-          const SizedBox(height: 8),
+          const SizedBox(height: 10),
           _SummaryRow('Related Purchase Order', po?.number ?? receipt.purchaseOrderId),
-          const SizedBox(height: 8),
+          const SizedBox(height: 10),
           _SummaryRow('Warehouse', warehouse?.name ?? receipt.warehouseId),
-          const SizedBox(height: 8),
+          const SizedBox(height: 10),
           _SummaryRow('Status', _statusText(receipt.status)),
-          const SizedBox(height: 8),
+          const SizedBox(height: 10),
           if (isDraft)
             TextField(
               controller: commentController,
@@ -500,7 +510,9 @@ class _SummaryRow extends StatelessWidget {
           width: 160,
           child: Text(
             label,
-            style: Theme.of(context).textTheme.bodySmall,
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+                ),
           ),
         ),
         Expanded(child: Text(value)),
@@ -517,20 +529,18 @@ class _ReceiptLinesTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (lines.isEmpty) {
-      return Center(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Text(
-            'No lines.',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
-                ),
-          ),
+      return Padding(
+        padding: const EdgeInsets.fromLTRB(24, 24, 24, 24),
+        child: Text(
+          'No lines.',
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+              ),
         ),
       );
     }
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.fromLTRB(24, 24, 24, 24),
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: DataTable(

@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 import '../../core/router/app_routes.dart';
 import '../../shared/app_page_header.dart';
 import '../../shared/app_placeholder_state.dart';
+import '../../shared/list_layout_constants.dart';
+import '../../shared/list_page_workspace.dart';
 import '../sales_orders/data/sales_orders_repository.dart';
 import '../warehouses/data/warehouses_repository.dart';
 import 'data/shipment.dart';
@@ -78,27 +80,37 @@ class _ShipmentsListPageState extends State<ShipmentsListPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        const AppPageHeader(title: 'Shipments'),
-        const Divider(height: 1),
-        _ControlsBar(
-          searchController: _searchController,
-          statusFilter: _statusFilter,
-          onFilterChanged: (v) => setState(() {
-            _statusFilter = v;
-            _shipments = _repo.search(query: _searchQuery, statusFilter: v);
-          }),
-        ),
-        const Divider(height: 1),
-        Expanded(
-          child: _loading
-              ? const Center(child: CircularProgressIndicator())
-              : _buildContent(),
-        ),
-      ],
+    final theme = Theme.of(context);
+    return ListPageWorkspace(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const AppPageHeader(title: 'Shipments'),
+          Divider(height: 1, thickness: 1, color: theme.dividerColor.withValues(alpha: 0.8)),
+          Container(
+            color: theme.colorScheme.surfaceContainerLowest.withValues(alpha: 0.35),
+            child: _ControlsBar(
+              searchController: _searchController,
+              statusFilter: _statusFilter,
+              onFilterChanged: (v) => setState(() {
+                _statusFilter = v;
+                _shipments = _repo.search(query: _searchQuery, statusFilter: v);
+              }),
+            ),
+          ),
+          Divider(height: 1, thickness: 1, color: theme.dividerColor.withValues(alpha: 0.8)),
+          Expanded(
+            child: _loading
+                ? const Center(child: CircularProgressIndicator())
+                : Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: ListLayoutConstants.horizontalPadding),
+                    child: _buildContent(),
+                  ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -108,7 +120,7 @@ class _ShipmentsListPageState extends State<ShipmentsListPage> {
       return AppPlaceholderState(
         message: isFiltered
             ? 'No shipments match current search'
-            : 'No shipments yet',
+            : 'No shipments yet\nShipments are created from confirmed sales orders.',
         icon: isFiltered ? Icons.search_off : Icons.local_shipping_outlined,
       );
     }
@@ -153,53 +165,72 @@ class _ControlsBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+      padding: const EdgeInsets.symmetric(
+        horizontal: ListLayoutConstants.horizontalPadding,
+        vertical: ListLayoutConstants.toolbarVerticalPadding,
+      ),
       child: Row(
         children: [
-          SizedBox(
-            width: 240,
-            height: 36,
-            child: TextField(
-              controller: searchController,
-              decoration: const InputDecoration(
-                hintText: 'Search by number',
-                isDense: true,
-                border: OutlineInputBorder(),
-                contentPadding: EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 8,
-                ),
-              ),
+          Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: ListLayoutConstants.toolbarClusterPaddingH,
+              vertical: ListLayoutConstants.toolbarClusterPaddingV,
             ),
-          ),
-          const SizedBox(width: 16),
-          Row(
-            children: [
-              ChoiceChip(
-                label: const Text('All'),
-                selected: statusFilter == null,
-                onSelected: (_) => onFilterChanged(null),
-              ),
-              const SizedBox(width: 8),
-              ChoiceChip(
-                label: const Text('Draft'),
-                selected: statusFilter == 'draft',
-                onSelected: (v) => onFilterChanged(v ? 'draft' : null),
-              ),
-              const SizedBox(width: 8),
-              ChoiceChip(
-                label: const Text('Posted'),
-                selected: statusFilter == 'posted',
-                onSelected: (v) => onFilterChanged(v ? 'posted' : null),
-              ),
-              const SizedBox(width: 8),
-              ChoiceChip(
-                label: const Text('Cancelled'),
-                selected: statusFilter == 'cancelled',
-                onSelected: (v) => onFilterChanged(v ? 'cancelled' : null),
-              ),
-            ],
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(ListLayoutConstants.toolbarClusterBorderRadius),
+              color: theme.colorScheme.surfaceContainerLowest.withValues(alpha: ListLayoutConstants.toolbarClusterBackgroundOpacity),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SizedBox(
+                  width: ListLayoutConstants.searchFieldWidth,
+                  height: ListLayoutConstants.searchFieldHeight,
+                  child: TextField(
+                    controller: searchController,
+                    decoration: const InputDecoration(
+                      hintText: 'Search by number',
+                      isDense: true,
+                      border: OutlineInputBorder(),
+                      contentPadding: EdgeInsets.symmetric(
+                        horizontal: ListLayoutConstants.searchContentPaddingH,
+                        vertical: ListLayoutConstants.searchContentPaddingV,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: ListLayoutConstants.gapSearchToFilters),
+                Row(
+                  children: [
+                    ChoiceChip(
+                      label: const Text('All'),
+                      selected: statusFilter == null,
+                      onSelected: (_) => onFilterChanged(null),
+                    ),
+                    const SizedBox(width: ListLayoutConstants.gapBetweenChips),
+                    ChoiceChip(
+                      label: const Text('Draft'),
+                      selected: statusFilter == 'draft',
+                      onSelected: (v) => onFilterChanged(v ? 'draft' : null),
+                    ),
+                    const SizedBox(width: ListLayoutConstants.gapBetweenChips),
+                    ChoiceChip(
+                      label: const Text('Posted'),
+                      selected: statusFilter == 'posted',
+                      onSelected: (v) => onFilterChanged(v ? 'posted' : null),
+                    ),
+                    const SizedBox(width: ListLayoutConstants.gapBetweenChips),
+                    ChoiceChip(
+                      label: const Text('Cancelled'),
+                      selected: statusFilter == 'cancelled',
+                      onSelected: (v) => onFilterChanged(v ? 'cancelled' : null),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ],
       ),
@@ -224,33 +255,47 @@ class _ShipmentsGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final headerStyle = ListLayoutConstants.tableHeaderStyle(theme);
     final allSelected =
         shipments.isNotEmpty && selectedIds.length == shipments.length;
-    return SingleChildScrollView(
-      scrollDirection: Axis.vertical,
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(ListLayoutConstants.tableSurfaceBorderRadius),
+        border: Border.all(
+          color: theme.colorScheme.outline.withValues(alpha: ListLayoutConstants.tableSurfaceBorderOpacity),
+        ),
+        color: theme.colorScheme.surfaceContainerLowest.withValues(alpha: ListLayoutConstants.tableSurfaceBackgroundOpacity),
+      ),
+      clipBehavior: Clip.antiAlias,
       child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: DataTable(
-          headingRowColor: WidgetStateProperty.resolveWith((states) {
-            return Theme.of(context)
-                .colorScheme
-                .surfaceContainerHighest
-                .withValues(alpha: 0.5);
-          }),
-          columns: [
-            DataColumn(
-              label: Checkbox(
-                value: allSelected,
-                tristate: true,
-                onChanged: (v) => onSelectAll(v == true),
+        scrollDirection: Axis.vertical,
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: DataTable(
+            headingRowHeight: ListLayoutConstants.tableHeadingRowHeight,
+            dataRowMinHeight: ListLayoutConstants.tableDataRowHeight,
+            dataRowMaxHeight: ListLayoutConstants.tableDataRowHeight,
+            columnSpacing: ListLayoutConstants.tableColumnSpacing,
+            horizontalMargin: ListLayoutConstants.tableHorizontalMargin,
+            headingRowColor: WidgetStateProperty.resolveWith((states) {
+              return theme.colorScheme.surfaceContainerHighest
+                  .withValues(alpha: ListLayoutConstants.tableHeaderBackgroundOpacity);
+            }),
+            columns: [
+              DataColumn(
+                label: Checkbox(
+                  value: allSelected,
+                  tristate: true,
+                  onChanged: (v) => onSelectAll(v == true),
+                ),
               ),
-            ),
-            const DataColumn(label: Text('Number')),
-            DataColumn(label: Text('Date')),
-            DataColumn(label: Text('Sales Order')),
-            DataColumn(label: Text('Warehouse')),
-            DataColumn(label: Text('Status')),
-          ],
+              DataColumn(label: Text('Number', style: headerStyle)),
+              DataColumn(label: Text('Date', style: headerStyle)),
+              DataColumn(label: Text('Sales Order', style: headerStyle)),
+              DataColumn(label: Text('Warehouse', style: headerStyle)),
+              DataColumn(label: Text('Status', style: headerStyle)),
+            ],
           rows: shipments.map((s) {
             final selected = selectedIds.contains(s.id);
             final so = salesOrdersRepository.getById(s.salesOrderId);
@@ -264,18 +309,44 @@ class _ShipmentsGrid extends StatelessWidget {
                     onChanged: (v) => onSelectionChanged(s.id, v ?? false),
                   ),
                 ),
-                DataCell(Text(s.number), onTap: () => onRowTap(s)),
-                DataCell(Text(_displayDate(s.date)), onTap: () => onRowTap(s)),
                 DataCell(
-                  Text(so?.number ?? s.salesOrderId),
+                  ConstrainedBox(
+                    constraints: const BoxConstraints(
+                        minWidth: ListLayoutConstants.minColNumber),
+                    child: Text(s.number),
+                  ),
                   onTap: () => onRowTap(s),
                 ),
                 DataCell(
-                  Text(warehouse?.name ?? s.warehouseId),
+                  ConstrainedBox(
+                    constraints: const BoxConstraints(
+                        minWidth: ListLayoutConstants.minColDate),
+                    child: Text(_displayDate(s.date)),
+                  ),
                   onTap: () => onRowTap(s),
                 ),
                 DataCell(
-                  Text(_statusLabel(s.status)),
+                  ConstrainedBox(
+                    constraints: const BoxConstraints(
+                        minWidth: ListLayoutConstants.minColRelation),
+                    child: Text(so?.number ?? s.salesOrderId),
+                  ),
+                  onTap: () => onRowTap(s),
+                ),
+                DataCell(
+                  ConstrainedBox(
+                    constraints: const BoxConstraints(
+                        minWidth: ListLayoutConstants.minColRelation),
+                    child: Text(warehouse?.name ?? s.warehouseId),
+                  ),
+                  onTap: () => onRowTap(s),
+                ),
+                DataCell(
+                  ConstrainedBox(
+                    constraints: const BoxConstraints(
+                        minWidth: ListLayoutConstants.minColStatus),
+                    child: Text(_statusLabel(s.status)),
+                  ),
                   onTap: () => onRowTap(s),
                 ),
               ],
@@ -283,6 +354,7 @@ class _ShipmentsGrid extends StatelessWidget {
           }).toList(),
         ),
       ),
+    ),
     );
   }
 

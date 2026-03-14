@@ -36,43 +36,65 @@ class SidebarItem extends StatelessWidget {
               : AppColorTokens.sidebarTextLight);
 
     return Material(
-      color: isActive ? hoverColor.withValues(alpha: 0.5) : Colors.transparent,
+      color: Colors.transparent,
       child: InkWell(
         onTap: () => context.go(path),
-        hoverColor: hoverColor.withValues(alpha: 0.6),
+        hoverColor: hoverColor.withValues(alpha: 0.4),
         child: LayoutBuilder(
           builder: (context, constraints) {
-            final narrow = constraints.maxWidth < 36;
+            final narrow = constraints.maxWidth < 60;
             if (narrow) {
-              return Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8),
+              // Collapsed: icon with subtle active background when selected
+              return Container(
+                constraints: const BoxConstraints(minHeight: 40),
+                padding: const EdgeInsets.symmetric(vertical: 10),
                 child: Center(
-                  child: Icon(icon, size: 20, color: textColor),
+                  child: isActive
+                      ? Container(
+                          padding: const EdgeInsets.all(6),
+                          decoration: BoxDecoration(
+                            color: hoverColor.withValues(alpha: 0.4),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Icon(icon, size: 20, color: textColor),
+                        )
+                      : Icon(icon, size: 22, color: textColor),
                 ),
               );
             }
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-              child: Row(
-                children: [
-                  Icon(icon, size: 20, color: textColor),
-                  if (isExpanded) ...[
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: Text(
-                        label,
-                        style: TextStyle(
-                          fontSize: 13,
-                          fontWeight:
-                              isActive ? FontWeight.w600 : FontWeight.normal,
-                          color: textColor,
+            // Expanded: active = soft background only, no hard border
+            return Container(
+              constraints: const BoxConstraints(minHeight: 36),
+              margin: const EdgeInsets.symmetric(horizontal: 8),
+              decoration: isActive
+                  ? BoxDecoration(
+                      color: hoverColor.withValues(alpha: 0.45),
+                      borderRadius: BorderRadius.circular(6),
+                    )
+                  : null,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                child: Row(
+                  children: [
+                    Icon(icon, size: 20, color: textColor),
+                    if (isExpanded) ...[
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Text(
+                          label,
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontWeight:
+                                isActive ? FontWeight.w600 : FontWeight.normal,
+                            color: textColor,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
                       ),
-                    ),
+                    ],
                   ],
-                ],
+                ),
               ),
             );
           },

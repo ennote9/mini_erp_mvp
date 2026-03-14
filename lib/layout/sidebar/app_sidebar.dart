@@ -40,18 +40,15 @@ class AppSidebar extends StatelessWidget {
       child: Column(
         children: [
           const SizedBox(height: 20),
-          // Dashboard (single item per 09_Navigation_and_App_Shell_v1)
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 14),
-            child: SidebarItem(
-              icon: Icons.dashboard_outlined,
-              label: 'Dashboard',
-              path: '/${AppRoutes.pathDashboard}',
-              isExpanded: isExpanded,
-              isActive: _isActive(location, '/${AppRoutes.pathDashboard}'),
-            ),
+          // Dashboard: same rail as groups, no separate block
+          SidebarItem(
+            icon: Icons.dashboard_outlined,
+            label: 'Dashboard',
+            path: '/${AppRoutes.pathDashboard}',
+            isExpanded: isExpanded,
+            isActive: _isActive(location, '/${AppRoutes.pathDashboard}'),
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 20),
           // Master Data
           SidebarGroup(
             label: 'Master Data',
@@ -96,7 +93,7 @@ class AppSidebar extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 20),
           // Purchasing
           SidebarGroup(
             label: 'Purchasing',
@@ -123,7 +120,7 @@ class AppSidebar extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 20),
           // Sales
           SidebarGroup(
             label: 'Sales',
@@ -150,7 +147,7 @@ class AppSidebar extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 20),
           // Inventory
           SidebarGroup(
             label: 'Inventory',
@@ -174,22 +171,26 @@ class AppSidebar extends StatelessWidget {
             ],
           ),
           const Spacer(),
+          // Footer: part of the rail, same padding as nav
           if (onCollapseToggle != null)
             Padding(
-              padding: const EdgeInsets.only(bottom: 14),
-              child: IconButton(
-                icon: Icon(
-                  isExpanded ? Icons.chevron_left : Icons.chevron_right,
-                  size: 20,
-                ),
-                onPressed: onCollapseToggle,
-                style: IconButton.styleFrom(
-                  minimumSize: const Size(28, 28),
-                  padding: EdgeInsets.zero,
-                  backgroundColor: Theme.of(context)
-                      .colorScheme
-                      .surfaceContainerHighest
-                      .withValues(alpha: 0.8),
+              padding: const EdgeInsets.fromLTRB(12, 8, 12, 14),
+              child: Center(
+                child: IconButton(
+                  icon: Icon(
+                    isExpanded ? Icons.chevron_left_rounded : Icons.chevron_right_rounded,
+                    size: 20,
+                    color: isDark
+                        ? AppColorTokens.sidebarTextMutedDark
+                        : AppColorTokens.sidebarTextMutedLight,
+                  ),
+                  onPressed: onCollapseToggle,
+                  style: IconButton.styleFrom(
+                    minimumSize: const Size(32, 32),
+                    padding: EdgeInsets.zero,
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    visualDensity: VisualDensity.compact,
+                  ),
                 ),
               ),
             ),

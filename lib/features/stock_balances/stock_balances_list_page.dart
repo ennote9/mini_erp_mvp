@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../shared/app_page_header.dart';
 import '../../shared/app_placeholder_state.dart';
+import '../../shared/list_layout_constants.dart';
+import '../../shared/list_page_workspace.dart';
 import '../items/data/items_repository.dart';
 import '../warehouses/data/warehouses_repository.dart';
 import 'data/stock_balance.dart';
@@ -92,36 +94,46 @@ class _StockBalancesListPageState extends State<StockBalancesListPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        const AppPageHeader(title: 'Stock Balances'),
-        const Divider(height: 1),
-        _ControlsBar(
-          searchController: _searchController,
-          warehouseFilter: _warehouseFilter,
-          onWarehouseFilterChanged: (v) => setState(() {
-            _warehouseFilter = v;
-            _balances = _repo.search(warehouseId: v);
-            _searchQuery = _searchController.text.trim().toLowerCase();
-            if (_searchQuery.isNotEmpty) {
-              _balances = _balances.where((b) {
-                final item = itemsRepository.getById(b.itemId);
-                if (item == null) return false;
-                return item.code.toLowerCase().contains(_searchQuery) ||
-                    item.name.toLowerCase().contains(_searchQuery);
-              }).toList();
-            }
-          }),
-        ),
-        const Divider(height: 1),
-        Expanded(
-          child: _loading
+    final theme = Theme.of(context);
+    return ListPageWorkspace(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const AppPageHeader(title: 'Stock Balances'),
+          Divider(height: 1, thickness: 1, color: theme.dividerColor.withValues(alpha: 0.8)),
+          Container(
+            color: theme.colorScheme.surfaceContainerLowest.withValues(alpha: 0.35),
+            child: _ControlsBar(
+              searchController: _searchController,
+              warehouseFilter: _warehouseFilter,
+              onWarehouseFilterChanged: (v) => setState(() {
+                _warehouseFilter = v;
+                _balances = _repo.search(warehouseId: v);
+                _searchQuery = _searchController.text.trim().toLowerCase();
+                if (_searchQuery.isNotEmpty) {
+                  _balances = _balances.where((b) {
+                    final item = itemsRepository.getById(b.itemId);
+                    if (item == null) return false;
+                    return item.code.toLowerCase().contains(_searchQuery) ||
+                        item.name.toLowerCase().contains(_searchQuery);
+                  }).toList();
+                }
+              }),
+            ),
+          ),
+          Divider(height: 1, thickness: 1, color: theme.dividerColor.withValues(alpha: 0.8)),
+          Expanded(
+            child: _loading
               ? const Center(child: CircularProgressIndicator())
-              : _buildContent(),
+              : Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: ListLayoutConstants.horizontalPadding),
+                  child: _buildContent(),
+                ),
         ),
       ],
+    ),
     );
   }
 
@@ -176,44 +188,63 @@ class _ControlsBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final warehouses = warehousesRepository.getAll().where((w) => w.isActive).toList();
+    final theme = Theme.of(context);
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+      padding: const EdgeInsets.symmetric(
+        horizontal: ListLayoutConstants.horizontalPadding,
+        vertical: ListLayoutConstants.toolbarVerticalPadding,
+      ),
       child: Row(
         children: [
-          SizedBox(
-            width: 240,
-            height: 36,
-            child: TextField(
-              controller: searchController,
-              decoration: const InputDecoration(
-                hintText: 'Search by item code or name',
-                isDense: true,
-                border: OutlineInputBorder(),
-                contentPadding: EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 8,
-                ),
-              ),
+          Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: ListLayoutConstants.toolbarClusterPaddingH,
+              vertical: ListLayoutConstants.toolbarClusterPaddingV,
             ),
-          ),
-          const SizedBox(width: 16),
-          Row(
-            children: [
-              ChoiceChip(
-                label: const Text('All warehouses'),
-                selected: warehouseFilter == null,
-                onSelected: (_) => onWarehouseFilterChanged(null),
-              ),
-              ...warehouses.map((w) => Padding(
-                    padding: const EdgeInsets.only(left: 8),
-                    child: ChoiceChip(
-                      label: Text(w.name),
-                      selected: warehouseFilter == w.id,
-                      onSelected: (v) =>
-                          onWarehouseFilterChanged(v ? w.id : null),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(ListLayoutConstants.toolbarClusterBorderRadius),
+              color: theme.colorScheme.surfaceContainerLowest.withValues(alpha: ListLayoutConstants.toolbarClusterBackgroundOpacity),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SizedBox(
+                  width: ListLayoutConstants.searchFieldWidth,
+                  height: ListLayoutConstants.searchFieldHeight,
+                  child: TextField(
+                    controller: searchController,
+                    decoration: const InputDecoration(
+                      hintText: 'Search by item code or name',
+                      isDense: true,
+                      border: OutlineInputBorder(),
+                      contentPadding: EdgeInsets.symmetric(
+                        horizontal: ListLayoutConstants.searchContentPaddingH,
+                        vertical: ListLayoutConstants.searchContentPaddingV,
+                      ),
                     ),
-                  )),
-            ],
+                  ),
+                ),
+                const SizedBox(width: ListLayoutConstants.gapSearchToFilters),
+                Row(
+                  children: [
+                    ChoiceChip(
+                      label: const Text('All warehouses'),
+                      selected: warehouseFilter == null,
+                      onSelected: (_) => onWarehouseFilterChanged(null),
+                    ),
+                    ...warehouses.expand((w) => [
+                          const SizedBox(width: ListLayoutConstants.gapBetweenChips),
+                          ChoiceChip(
+                            label: Text(w.name),
+                            selected: warehouseFilter == w.id,
+                            onSelected: (v) =>
+                                onWarehouseFilterChanged(v ? w.id : null),
+                          ),
+                        ]),
+                  ],
+                ),
+              ],
+            ),
           ),
         ],
       ),
@@ -236,32 +267,46 @@ class _StockBalancesGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final headerStyle = ListLayoutConstants.tableHeaderStyle(theme);
     final allSelected =
         balances.isNotEmpty && selectedIds.length == balances.length;
-    return SingleChildScrollView(
-      scrollDirection: Axis.vertical,
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(ListLayoutConstants.tableSurfaceBorderRadius),
+        border: Border.all(
+          color: theme.colorScheme.outline.withValues(alpha: ListLayoutConstants.tableSurfaceBorderOpacity),
+        ),
+        color: theme.colorScheme.surfaceContainerLowest.withValues(alpha: ListLayoutConstants.tableSurfaceBackgroundOpacity),
+      ),
+      clipBehavior: Clip.antiAlias,
       child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: DataTable(
-          headingRowColor: WidgetStateProperty.resolveWith((states) {
-            return Theme.of(context)
-                .colorScheme
-                .surfaceContainerHighest
-                .withValues(alpha: 0.5);
-          }),
-          columns: [
-            DataColumn(
-              label: Checkbox(
-                value: allSelected,
-                tristate: true,
-                onChanged: (v) => onSelectAll(v == true),
+        scrollDirection: Axis.vertical,
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: DataTable(
+            headingRowHeight: ListLayoutConstants.tableHeadingRowHeight,
+            dataRowMinHeight: ListLayoutConstants.tableDataRowHeight,
+            dataRowMaxHeight: ListLayoutConstants.tableDataRowHeight,
+            columnSpacing: ListLayoutConstants.tableColumnSpacing,
+            horizontalMargin: ListLayoutConstants.tableHorizontalMargin,
+            headingRowColor: WidgetStateProperty.resolveWith((states) {
+              return theme.colorScheme.surfaceContainerHighest
+                  .withValues(alpha: ListLayoutConstants.tableHeaderBackgroundOpacity);
+            }),
+            columns: [
+              DataColumn(
+                label: Checkbox(
+                  value: allSelected,
+                  tristate: true,
+                  onChanged: (v) => onSelectAll(v == true),
+                ),
               ),
-            ),
-            const DataColumn(label: Text('Item Code')),
-            const DataColumn(label: Text('Item Name')),
-            const DataColumn(label: Text('Warehouse')),
-            const DataColumn(label: Text('Qty On Hand')),
-          ],
+              DataColumn(label: Text('Item Code', style: headerStyle)),
+              DataColumn(label: Text('Item Name', style: headerStyle)),
+              DataColumn(label: Text('Warehouse', style: headerStyle)),
+              DataColumn(label: Text('Qty On Hand', style: headerStyle)),
+            ],
           rows: balances.map((b) {
             final selected = selectedIds.contains(b.id);
             final item = itemsRepository.getById(b.itemId);
@@ -275,15 +320,40 @@ class _StockBalancesGrid extends StatelessWidget {
                     onChanged: (v) => onSelectionChanged(b.id, v ?? false),
                   ),
                 ),
-                DataCell(Text(item?.code ?? b.itemId)),
-                DataCell(Text(item?.name ?? '')),
-                DataCell(Text(warehouse?.name ?? b.warehouseId)),
-                DataCell(Text('${b.qtyOnHand}')),
+                DataCell(
+                  ConstrainedBox(
+                    constraints: const BoxConstraints(
+                        minWidth: ListLayoutConstants.minColCode),
+                    child: Text(item?.code ?? b.itemId),
+                  ),
+                ),
+                DataCell(
+                  ConstrainedBox(
+                    constraints: const BoxConstraints(
+                        minWidth: ListLayoutConstants.minColName),
+                    child: Text(item?.name ?? ''),
+                  ),
+                ),
+                DataCell(
+                  ConstrainedBox(
+                    constraints: const BoxConstraints(
+                        minWidth: ListLayoutConstants.minColRelation),
+                    child: Text(warehouse?.name ?? b.warehouseId),
+                  ),
+                ),
+                DataCell(
+                  ConstrainedBox(
+                    constraints: const BoxConstraints(
+                        minWidth: ListLayoutConstants.minColQty),
+                    child: Text('${b.qtyOnHand}'),
+                  ),
+                ),
               ],
             );
           }).toList(),
         ),
       ),
+    ),
     );
   }
 }
